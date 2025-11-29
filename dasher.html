@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accept Request – DashDrop Dasher</title>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared.css">
+
+    <style>
+        .dasher-container {
+            max-width: 48rem;
+            margin: var(--space-12) auto;
+            padding: 0 var(--space-4);
+        }
+
+        .request-detail-card {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            box-shadow: var(--shadow-xl);
+            border: 3px solid var(--purple);
+            margin-bottom: var(--space-6);
+        }
+
+        .request-detail-card.urgent {
+            border-color: var(--red-600);
+            background: linear-gradient(to bottom, #FEF2F2, var(--white));
+        }
+
+        .reward-box {
+            background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            text-align: center;
+            margin-bottom: var(--space-6);
+        }
+
+        .location-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+        }
+
+        .status-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-4);
+        }
+
+        .status-btn {
+            padding: var(--space-4);
+            border-radius: var(--radius-xl);
+            border: 2px solid var(--gray-300);
+            background: var(--white);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-3);
+        }
+
+        .status-btn:hover {
+            border-color: var(--purple);
+            background: var(--gray-50);
+        }
+
+        .status-btn.active {
+            background: var(--green-600);
+            color: var(--white);
+            border-color: var(--green-600);
+        }
+
+        .status-btn.completed {
+            background: var(--gray-200);
+            color: var(--gray-600);
+            cursor: not-allowed;
+        }
+
+        .accepted-view {
+            display: none;
+        }
+
+        .accepted-view.active {
+            display: block;
+        }
+
+        .initial-view.hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="request.html" class="mobile-menu-link">Create Request</a>
+            <a href="dasher.html" class="mobile-menu-link">Dasher Dashboard</a>
+            <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
+        </nav>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="request.html">Create Request</a>
+                <a href="dasher.html" style="color: var(--purple); font-weight: 900;">Dasher Dashboard</a>
+            </div>
+
+            <div class="nav-actions">
+                <div class="badge badge-purple">
+                    <i data-lucide="star" width="14"></i> 4.9 Rating
+                </div>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="dasher-container">
+            <!-- Initial View -->
+            <div class="initial-view" id="initial-view">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl font-black mb-4">New Request Available</h1>
+                    <p style="color: var(--gray-600); font-size: 1.125rem;">
+                        Review the details and accept if you're available.
+                    </p>
+                </div>
+
+                <!-- Request Details -->
+                <div class="request-detail-card urgent" id="request-card">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-6);">
+                        <div class="badge badge-red">
+                            <i data-lucide="alert-triangle" width="14"></i> URGENT REQUEST
+                        </div>
+                        <div class="badge badge-gray">
+                            <i data-lucide="clock" width="14"></i> 2 mins ago
+                        </div>
+                    </div>
+
+                    <h2 class="text-3xl font-black mb-4">Notebooks & Stationery</h2>
+
+                    <p class="text-lg mb-6" style="color: var(--gray-700);">
+                        Need notebooks and pens urgently. Stationery shop near campus. Please hurry, exam in 30
+                        minutes.
+                    </p>
+
+                    <!-- Locations -->
+                    <div class="mb-6">
+                        <div class="location-row">
+                            <div
+                                style="background: var(--blue-50); color: var(--blue-600); padding: 0.75rem; border-radius: 50%;">
+                                <i data-lucide="map-pin" width="24"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <p class="text-sm font-bold" style="color: var(--gray-600);">PICK UP FROM</p>
+                                <p class="font-black text-lg">Campus Medical Store</p>
+                            </div>
+                        </div>
+
+                        <div style="text-align: center; margin: var(--space-2) 0;">
+                            <i data-lucide="arrow-down" width="24" style="color: var(--gray-400);"></i>
+                        </div>
+
+                        <div class="location-row">
+                            <div
+                                style="background: var(--green-50); color: var(--green-600); padding: 0.75rem; border-radius: 50%;">
+                                <i data-lucide="home" width="24"></i>
+                            </div>
+                            <div style="flex: 1;">
+                                <p class="text-sm font-bold" style="color: var(--gray-600);">DELIVER TO</p>
+                                <p class="font-black text-lg">Girls Hostel Block A • Room 405</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estimated Cost -->
+                    <div
+                        style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-6);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: var(--space-2);">
+                            <span style="color: var(--gray-600);">Estimated Item Cost:</span>
+                            <span class="font-bold">₹120</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="color: var(--gray-600);">Distance:</span>
+                            <span class="font-bold">~350m</span>
+                        </div>
+                    </div>
+
+                    <!-- Reward -->
+                    <div class="reward-box">
+                        <p class="text-sm font-bold mb-2">YOUR REWARD</p>
+                        <p class="text-5xl font-black mb-2">₹30</p>
+                        <p class="text-sm font-bold" style="color: var(--gray-700);">+ Urgent Bonus ₹15</p>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: var(--space-4);">
+                        <button class="btn btn-outline btn-lg" style="flex: 1;"
+                            onclick="window.location.href='index.html'">
+                            <i data-lucide="x" width="20"></i> Decline
+                        </button>
+                        <button class="btn btn-red btn-lg" style="flex: 2;" id="accept-btn">
+                            <i data-lucide="check" width="20"></i> Accept Request
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Info -->
+                <div class="card">
+                    <div style="display: flex; align-items: start; gap: var(--space-4);">
+                        <i data-lucide="info" width="24" style="color: var(--purple); flex-shrink: 0;"></i>
+                        <div>
+                            <p class="font-bold mb-2">Acceptance Tips</p>
+                            <ul
+                                style="color: var(--gray-600); font-size: 0.875rem; line-height: 1.8; padding-left: 1.25rem;">
+                                <li>Only accept if you can complete within 15-20 minutes</li>
+                                <li>Urgent requests require immediate action</li>
+                                <li>Keep the student updated with status changes</li>
+                                <li>Contact support if you face any issues</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Accepted View -->
+            <div class="accepted-view" id="accepted-view">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <div class="badge badge-green mb-4" style="font-size: 1rem;">
+                        <i data-lucide="check-circle" width="18"></i> Request Accepted
+                    </div>
+                    <h1 class="text-4xl font-black mb-4">Update Delivery Status</h1>
+                    <p style="color: var(--gray-600); font-size: 1.125rem;">
+                        Keep the student informed about your progress.
+                    </p>
+                </div>
+
+                <!-- Request Summary -->
+                <div class="card mb-6">
+                    <h3 class="font-black text-xl mb-4">Notebooks & Stationery</h3>
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-4);">
+                        <div>
+                            <p class="text-sm" style="color: var(--gray-600);">Pick-up</p>
+                            <p class="font-bold">Medical Store</p>
+                        </div>
+                        <div>
+                            <p class="text-sm" style="color: var(--gray-600);">Deliver to</p>
+                            <p class="font-bold">Hostel A • Room 405</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Update Buttons -->
+                <div class="status-buttons">
+                    <button class="status-btn" id="status-picked-up">
+                        <i data-lucide="package" width="24"></i>
+                        <div style="text-align: left; flex: 1;">
+                            <p class="font-black">Picked Up</p>
+                            <p class="text-sm" style="color: var(--gray-600);">I have the items</p>
+                        </div>
+                        <i data-lucide="circle" width="24" style="color: var(--gray-300);"></i>
+                    </button>
+
+                    <button class="status-btn" id="status-on-way" disabled>
+                        <i data-lucide="bike" width="24"></i>
+                        <div style="text-align: left; flex: 1;">
+                            <p class="font-black">On the Way</p>
+                            <p class="text-sm" style="color: var(--gray-600);">Heading to delivery location</p>
+                        </div>
+                        <i data-lucide="circle" width="24" style="color: var(--gray-300);"></i>
+                    </button>
+
+                    <button class="status-btn" id="status-delivered" disabled>
+                        <i data-lucide="check-circle" width="24"></i>
+                        <div style="text-align: left; flex: 1;">
+                            <p class="font-black">Delivered</p>
+                            <p class="text-sm" style="color: var(--gray-600);">Successfully handed over</p>
+                        </div>
+                        <i data-lucide="circle" width="24" style="color: var(--gray-300);"></i>
+                    </button>
+                </div>
+
+                <!-- Contact Student -->
+                <div class="card mt-6">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <p class="font-bold mb-1">Need to contact student?</p>
+                            <p class="text-sm" style="color: var(--gray-600);">Priya M. • Hostel A</p>
+                        </div>
+                        <button class="btn btn-outline">
+                            <i data-lucide="phone" width="18"></i> Call
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="shared.js"></script>
+    <script>
+        const acceptBtn = document.getElementById('accept-btn');
+        const initialView = document.getElementById('initial-view');
+        const acceptedView = document.getElementById('accepted-view');
+        const statusPickedUp = document.getElementById('status-picked-up');
+        const statusOnWay = document.getElementById('status-on-way');
+        const statusDelivered = document.getElementById('status-delivered');
+
+        let currentStatus = 0;
+
+        // Accept Request
+        acceptBtn.addEventListener('click', () => {
+            initialView.classList.add('hidden');
+            acceptedView.classList.add('active');
+            DashDrop.showToast('Request accepted! Update your status as you progress.', 'success');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // Status Updates
+        statusPickedUp.addEventListener('click', () => {
+            if (currentStatus === 0) {
+                statusPickedUp.classList.add('active');
+                statusPickedUp.querySelector('[data-lucide="circle"]').setAttribute('data-lucide', 'check-circle');
+                lucide.createIcons();
+                statusOnWay.disabled = false;
+                currentStatus = 1;
+                DashDrop.showToast('Status updated: Picked Up', 'success');
+            }
+        });
+
+        statusOnWay.addEventListener('click', () => {
+            if (currentStatus === 1) {
+                statusPickedUp.classList.add('completed');
+                statusPickedUp.classList.remove('active');
+                statusOnWay.classList.add('active');
+                statusOnWay.querySelector('[data-lucide="circle"]').setAttribute('data-lucide', 'check-circle');
+                lucide.createIcons();
+                statusDelivered.disabled = false;
+                currentStatus = 2;
+                DashDrop.showToast('Status updated: On the Way', 'success');
+            }
+        });
+
+        statusDelivered.addEventListener('click', () => {
+            if (currentStatus === 2) {
+                statusOnWay.classList.add('completed');
+                statusOnWay.classList.remove('active');
+                statusDelivered.classList.add('active');
+                statusDelivered.querySelector('[data-lucide="circle"]').setAttribute('data-lucide', 'check-circle');
+                lucide.createIcons();
+                currentStatus = 3;
+                DashDrop.showToast('Delivery completed! ₹30 added to your wallet.', 'success');
+
+                // Redirect to dasher dashboard after 2 seconds
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+
+</html>

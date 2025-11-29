@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dasher Dashboard – DashDrop</title>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared.css">
+
+    <style>
+        .dashboard-container {
+            max-width: 80rem;
+            margin: var(--space-8) auto;
+            padding: 0 var(--space-4);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: var(--white);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            border: 2px solid var(--gray-200);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: var(--space-2);
+        }
+
+        .stat-label {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: var(--space-6);
+        }
+
+        .request-card {
+            background: var(--white);
+            border: 3px solid var(--gray-200);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .request-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--purple);
+        }
+
+        .request-card.urgent {
+            border-color: var(--red-600);
+            background: linear-gradient(to bottom, #FEF2F2, var(--white));
+        }
+
+        .request-card.urgent:hover {
+            border-color: var(--red-700);
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-4);
+        }
+
+        .request-title {
+            font-size: 1.25rem;
+            font-weight: 900;
+            margin-bottom: var(--space-3);
+            color: var(--gray-900);
+        }
+
+        .request-description {
+            color: var(--gray-600);
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+
+        .location-info {
+            background: var(--gray-50);
+            padding: var(--space-3);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-4);
+            font-size: 0.875rem;
+        }
+
+        .location-info p {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            margin-bottom: var(--space-2);
+        }
+
+        .location-info p:last-child {
+            margin-bottom: 0;
+        }
+
+        .request-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--space-4);
+            border-top: 2px solid var(--gray-100);
+        }
+
+        .reward-badge {
+            background: var(--yellow);
+            color: var(--black);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-full);
+            font-weight: 900;
+            font-size: 1.125rem;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.625rem 1.25rem;
+            background: var(--gray-100);
+            border: 2px solid transparent;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .filter-tab:hover {
+            background: var(--gray-200);
+        }
+
+        .filter-tab.active {
+            background: var(--purple);
+            color: var(--white);
+            border-color: var(--purple);
+        }
+
+        @media (max-width: 640px) {
+            .requests-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="request.html" class="mobile-menu-link">Create Request</a>
+            <a href="dasher-dashboard.html" class="mobile-menu-link">Dasher Dashboard</a>
+            <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
+        </nav>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="request.html">Create Request</a>
+                <a href="dasher-dashboard.html" style="color: var(--purple); font-weight: 900;">Dasher Dashboard</a>
+            </div>
+
+            <div class="nav-actions">
+                <div class="badge badge-purple">
+                    <i data-lucide="star" width="14"></i> 4.9 Rating
+                </div>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="dashboard-container">
+            <!-- Header -->
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-black mb-4">Available Requests</h1>
+                <p style="color: var(--gray-600); font-size: 1.125rem;">
+                    Accept requests and start earning. Updated in real-time.
+                </p>
+            </div>
+
+            <!-- Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--purple);">12</div>
+                    <div class="stat-label">Available Requests</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--green-600);">₹450</div>
+                    <div class="stat-label">Today's Earnings</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--orange-600);">8</div>
+                    <div class="stat-label">Completed Today</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" style="color: var(--yellow);">4.9</div>
+                    <div class="stat-label">Your Rating</div>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-tabs">
+                <button class="filter-tab active">All Requests</button>
+                <button class="filter-tab">Urgent Only</button>
+                <button class="filter-tab">Nearby</button>
+                <button class="filter-tab">High Reward</button>
+            </div>
+
+            <!-- Requests Grid -->
+            <div class="requests-grid">
+                <!-- Request 1 - Urgent -->
+                <div class="request-card urgent" onclick="window.location.href='dasher.html'">
+                    <div class="request-header">
+                        <div class="badge badge-red">
+                            <i data-lucide="alert-triangle" width="12"></i> URGENT
+                        </div>
+                        <div class="badge badge-gray">
+                            <i data-lucide="clock" width="12"></i> 2 mins ago
+                        </div>
+                    </div>
+                    <h3 class="request-title">Notebooks & Stationery</h3>
+                    <p class="request-description">
+                        Need notebooks and pens urgently. Stationery shop near campus. Please hurry, exam in 30
+                        minutes.
+                    </p>
+                    <div class="location-info">
+                        <p>
+                            <i data-lucide="map-pin" width="14" style="color: var(--blue-600);"></i>
+                            <strong>Pick up:</strong> Campus Medical Store
+                        </p>
+                        <p>
+                            <i data-lucide="home" width="14" style="color: var(--green-600);"></i>
+                            <strong>Deliver:</strong> Girls Hostel Block A • Room 405
+                        </p>
+                        <p>
+                            <i data-lucide="ruler" width="14" style="color: var(--gray-600);"></i>
+                            <strong>Distance:</strong> ~350m
+                        </p>
+                    </div>
+                    <div class="request-meta">
+                        <div class="reward-badge">₹30 + ₹15 bonus</div>
+                        <button class="btn btn-red btn-sm">Accept</button>
+                    </div>
+                </div>
+
+                <!-- Request 2 - Normal -->
+                <div class="request-card">
+                    <div class="request-header">
+                        <div class="badge badge-gray">Normal</div>
+                        <div class="badge badge-gray">
+                            <i data-lucide="clock" width="12"></i> 5 mins ago
+                        </div>
+                    </div>
+                    <h3 class="request-title">Pick up notes from library</h3>
+                    <p class="request-description">
+                        Need to collect my CS101 notes from the library desk. They're under my name - Rahul Sharma.
+                    </p>
+                    <div class="location-info">
+                        <p>
+                            <i data-lucide="map-pin" width="14" style="color: var(--blue-600);"></i>
+                            <strong>Pick up:</strong> Central Library
+                        </p>
+                        <p>
+                            <i data-lucide="home" width="14" style="color: var(--green-600);"></i>
+                            <strong>Deliver:</strong> Hostel Block C • Room 203
+                        </p>
+                        <p>
+                            <i data-lucide="ruler" width="14" style="color: var(--gray-600);"></i>
+                            <strong>Distance:</strong> ~500m
+                        </p>
+                    </div>
+                    <div class="request-meta">
+                        <div class="reward-badge">₹15</div>
+                        <button class="btn btn-primary btn-sm">Accept</button>
+                    </div>
+                </div>
+
+                <!-- Request 3 - Normal -->
+                <div class="request-card">
+                    <div class="request-header">
+                        <div class="badge badge-gray">Normal</div>
+                        <div class="badge badge-gray">
+                            <i data-lucide="clock" width="12"></i> 8 mins ago
+                        </div>
+                    </div>
+                    <h3 class="request-title">Cold Coffee & Samosa</h3>
+                    <p class="request-description">
+                        One cold coffee and 2 samosas from the main canteen. No sugar in coffee please.
+                    </p>
+                    <div class="location-info">
+                        <p>
+                            <i data-lucide="map-pin" width="14" style="color: var(--blue-600);"></i>
+                            <strong>Pick up:</strong> Main Canteen
+                        </p>
+                        <p>
+                            <i data-lucide="home" width="14" style="color: var(--green-600);"></i>
+                            <strong>Deliver:</strong> Lab Block 2 • Room 301
+                        </p>
+                        <p>
+                            <i data-lucide="ruler" width="14" style="color: var(--gray-600);"></i>
+                            <strong>Distance:</strong> ~400m
+                        </p>
+                    </div>
+                    <div class="request-meta">
+                        <div class="reward-badge">₹20</div>
+                        <button class="btn btn-primary btn-sm">Accept</button>
+                    </div>
+                </div>
+
+                <!-- Request 4 - Urgent -->
+                <div class="request-card urgent">
+                    <div class="request-header">
+                        <div class="badge badge-red">
+                            <i data-lucide="alert-triangle" width="12"></i> URGENT
+                        </div>
+                        <div class="badge badge-gray">
+                            <i data-lucide="clock" width="12"></i> 3 mins ago
+                        </div>
+                    </div>
+                    <h3 class="request-title">Hall Ticket from Room</h3>
+                    <p class="request-description">
+                        Forgot my hall ticket in my room! Exam starts in 20 minutes. It's on my study table.
+                    </p>
+                    <div class="location-info">
+                        <p>
+                            <i data-lucide="map-pin" width="14" style="color: var(--blue-600);"></i>
+                            <strong>Pick up:</strong> Hostel A • Room 302
+                        </p>
+                        <p>
+                            <i data-lucide="home" width="14" style="color: var(--green-600);"></i>
+                            <strong>Deliver:</strong> Exam Hall
+                        </p>
+                        <p>
+                            <i data-lucide="ruler" width="14" style="color: var(--gray-600);"></i>
+                            <strong>Distance:</strong> ~600m
+                        </p>
+                    </div>
+                    <div class="request-meta">
+                        <div class="reward-badge">₹25 + ₹20 bonus</div>
+                        <button class="btn btn-red btn-sm">Accept</button>
+                    </div>
+                </div>
+
+                <!-- Request 5 - Normal -->
+                <div class="request-card">
+                    <div class="request-header">
+                        <div class="badge badge-gray">Normal</div>
+                        <div class="badge badge-gray">
+                            <i data-lucide="clock" width="12"></i> 10 mins ago
+                        </div>
+                    </div>
+                    <h3 class="request-title">Return book to admin block</h3>
+                    <p class="request-description">
+                        Need to return this library book to the admin office. It's already packed and ready.
+                    </p>
+                    <div class="location-info">
+                        <p>
+                            <i data-lucide="map-pin" width="14" style="color: var(--blue-600);"></i>
+                            <strong>Pick up:</strong> Hostel B • Room 105
+                        </p>
+                        <p>
+                            <i data-lucide="home" width="14" style="color: var(--green-600);"></i>
+                            <strong>Deliver:</strong> Admin Block
+                        </p>
+                        <p>
+                            <i data-lucide="ruler" width="14" style="color: var(--gray-600);"></i>
+                            <strong>Distance:</strong> ~450m
+                        </p>
+                    </div>
+                    <div class="request-meta">
+                        <div class="reward-badge">₹12</div>
+                        <button class="btn btn-primary btn-sm">Accept</button>
+                    </div>
+                </div>
+
+                <!-- Request 6 - Normal -->
+                <div class="request-card">
+                    <div class="request-header">
+                        <div class="badge badge-gray">Normal</div>
+                        <div class="badge badge-gray">
+                            <i data-lucide="clock" width="12"></i> 12 mins ago
+                        </div>
+                    </div>
+                    <h3 class="request-title">Get printouts for assignment</h3>
+                    <p class="request-description">
+                        Need 10 pages printed from the xerox shop. PDF already sent to shop via WhatsApp.
+                    </p>
+                    <div class="location-info">
+                        <p>
+                            <i data-lucide="map-pin" width="14" style="color: var(--blue-600);"></i>
+                            <strong>Pick up:</strong> Xerox Shop
+                        </p>
+                        <p>
+                            <i data-lucide="home" width="14" style="color: var(--green-600);"></i>
+                            <strong>Deliver:</strong> Hostel D • Room 401
+                        </p>
+                        <p>
+                            <i data-lucide="ruler" width="14" style="color: var(--gray-600);"></i>
+                            <strong>Distance:</strong> ~550m
+                        </p>
+                    </div>
+                    <div class="request-meta">
+                        <div class="reward-badge">₹18</div>
+                        <button class="btn btn-primary btn-sm">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher-dashboard.html" class="footer-link">Dasher Dashboard</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="shared.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

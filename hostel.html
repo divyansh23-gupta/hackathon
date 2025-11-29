@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hostel Needs – DashDrop</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .category-header {
+            background: linear-gradient(135deg, #FEF9C3 0%, #FEF3C7 100%);
+            padding: var(--space-16) var(--space-4);
+            text-align: center;
+        }
+
+        .category-icon-large {
+            width: 80px;
+            height: 80px;
+            background: #CA8A04;
+            color: var(--white);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-4);
+            font-size: 2.5rem;
+        }
+
+        .item-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .item-info {
+            padding: var(--space-4);
+        }
+
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            background: var(--green-50);
+            color: var(--green-600);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: var(--space-6);
+        }
+
+        .live-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .live-item {
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            animation: slideInRight 0.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="request.html" class="mobile-menu-link">Create Request</a>
+            <a href="index.html#categories" class="mobile-menu-link">All Categories</a>
+            <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
+        </nav>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#categories">Categories</a>
+                <a href="request.html">Create Request</a>
+            </div>
+            <div class="nav-actions">
+                <button class="icon-btn">
+                    <i data-lucide="shopping-bag" width="24"></i>
+                    <span class="cart-badge">2</span>
+                </button>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="category-header">
+            <div class="container">
+                <div class="category-icon-large">
+                    <i data-lucide="package" width="48"></i>
+                </div>
+                <h1 class="text-4xl font-black mb-4">Hostel Needs</h1>
+                <p class="text-lg" style="color: var(--gray-700); max-width: 42rem; margin: 0 auto;">
+                    Get daily essentials, toiletries, and hostel supplies delivered to your room.
+                </p>
+            </div>
+        </section>
+
+        <section class="section-sm">
+            <div class="container" style="max-width: 56rem;">
+                <div style="position: relative;">
+                    <input type="text" placeholder="Search within Hostel Needs..." class="form-input form-input-lg"
+                        style="padding-left: 3.5rem;">
+                    <i data-lucide="search" width="24"
+                        style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-sm" style="padding-top: 0;">
+            <div class="container text-center">
+                <div class="availability-badge" style="margin: 0 auto;">
+                    <span style="width: 8px; height: 8px; background: var(--green-600); border-radius: 50%;"
+                        class="animate-pulse"></span>
+                    5 Dashers Nearby • Campus Store Open
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-8">Popular Items</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <div class="item-card">
+                        <div class="item-image">🪣</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Bucket</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹80 • 5-10 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+
+                    <div class="item-card">
+                        <div class="item-image">☕</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Mug</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹40 • 4-7 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+
+                    <div class="item-card">
+                        <div class="item-image">🧼</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Soap</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹30 • 3-6 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+
+                    <div class="item-card">
+                        <div class="item-image">🧴</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Shampoo</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹120 • 4-8 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+
+                    <div class="item-card">
+                        <div class="item-image">🛏️</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Bedsheet</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹300 • 6-12 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+
+                    <div class="item-card">
+                        <div class="item-image">🧺</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Detergent</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹100 • 5-9 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+
+                    <div class="item-card">
+                        <div class="item-image">🧻</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Toilet Paper</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹50 • 4-7 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+
+                    <div class="item-card">
+                        <div class="item-image">🧖</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Towel</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">₹150 • 5-10 mins</p>
+                            <button class="btn btn-primary btn-sm btn-full">Request This</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-6">Quick Request Templates</h2>
+                <div class="chip-container">
+                    <button class="chip">Bring toiletries</button>
+                    <button class="chip">Pick up laundry</button>
+                    <button class="chip">Deliver items to hostel</button>
+                    <button class="chip">Get bucket urgently</button>
+                    <button class="chip">Bring detergent</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container" style="max-width: 56rem;">
+                <div class="card">
+                    <h3 class="text-2xl font-black mb-6">Custom Hostel Request</h3>
+                    <div class="form-group">
+                        <textarea class="form-textarea"
+                            placeholder="Describe what you need... (e.g., Need bucket urgently to take bath)"
+                            rows="3"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <select class="form-select">
+                            <option>Select delivery location...</option>
+                            <option>Hostel Block A</option>
+                            <option>Hostel Block B</option>
+                            <option>Hostel Block C</option>
+                            <option>Hostel Block D</option>
+                        </select>
+                        <div class="mode-toggle-group">
+                            <button type="button" class="mode-toggle-btn active">Normal</button>
+                            <button type="button" class="mode-toggle-btn">
+                                <i data-lucide="alert-triangle" width="14"></i> Urgent (+₹20)
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--space-4); align-items: center;">
+                        <button class="btn btn-outline">
+                            <i data-lucide="camera" width="18"></i> Add Photo
+                        </button>
+                        <button class="btn btn-primary btn-full">
+                            Post Request <i data-lucide="send" width="18"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-6">Live Recent Requests</h2>
+                <div class="live-feed">
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <p class="text-sm"><strong>Toiletries</strong> delivered to Hostel B</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">3 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="zap" width="20" style="color: var(--red-600);"></i>
+                        <p class="text-sm"><strong>Urgent: Bucket needed</strong> at Hostel A</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">7 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="package" width="20" style="color: var(--purple);"></i>
+                        <p class="text-sm"><strong>Laundry</strong> picked up from Hostel C</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">11 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <p class="text-sm"><strong>Detergent</strong> delivered to Hostel D</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">16 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <p class="text-sm"><strong>Bedsheet</strong> delivered to Hostel B</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">20 mins ago</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container text-center">
+                <h2 class="text-3xl font-black mb-6">Ready to Order?</h2>
+                <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                    <a href="request.html" class="btn btn-primary btn-lg">
+                        Post a Request in Hostel Needs
+                    </a>
+                    <a href="dasher.html" class="btn btn-secondary btn-lg">
+                        Become a Dasher for Hostel
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="shared.js"></script>
+    <script>
+        // Make all "Request This" buttons interactive
+        document.querySelectorAll('.item-card .btn-primary').forEach((btn, index) => {
+            btn.addEventListener('click', function () {
+                const itemCard = this.closest('.item-card');
+                const itemName = itemCard.querySelector('h3').textContent;
+                DashDrop.showToast(`Adding ${itemName} to request...`, 'success');
+                setTimeout(() => {
+                    window.location.href = `success.html?item=${encodeURIComponent(itemName)}`;
+                }, 800);
+            });
+        });
+
+        // Make template chips interactive
+        document.querySelectorAll('.chip').forEach(chip => {
+            chip.addEventListener('click', function () {
+                const template = this.textContent;
+                DashDrop.showToast(`Using template: ${template}`, 'success');
+                setTimeout(() => {
+                    window.location.href = `success.html?template=${encodeURIComponent(template)}`;
+                }, 800);
+            });
+        });
+
+        // Make "Post Request" button interactive
+        const postRequestBtn = document.querySelector('.btn-primary.btn-full');
+        if (postRequestBtn && postRequestBtn.textContent.includes('Post Request')) {
+            postRequestBtn.addEventListener('click', function () {
+                const description = document.querySelector('.form-textarea').value;
+                const location = document.querySelector('.form-select').value;
+                if (!description.trim()) {
+                    DashDrop.showToast('Please describe what you need', 'error');
+                    return;
+                }
+                if (!location) {
+                    DashDrop.showToast('Please select delivery location', 'error');
+                    return;
+                }
+                DashDrop.showToast('Posting your request...', 'success');
+                setTimeout(() => {
+                    window.location.href = 'success.html';
+                }, 800);
+            });
+        }
+    </script>
+</body>
+
+</html>

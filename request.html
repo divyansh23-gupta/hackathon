@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Request – DashDrop</title>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared.css">
+
+    <style>
+        .form-container {
+            max-width: 48rem;
+            margin: var(--space-12) auto;
+            padding: 0 var(--space-4);
+        }
+
+        .form-card {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-10);
+            box-shadow: var(--shadow-xl);
+            border: 2px solid var(--gray-200);
+        }
+
+        .form-card.urgent-mode {
+            border-color: var(--red-500);
+            background: linear-gradient(to bottom, #FEF2F2, var(--white));
+        }
+
+        .tip-suggestions {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-3);
+        }
+
+        .tip-btn {
+            padding: 0.5rem 1rem;
+            background: var(--gray-100);
+            border: 2px solid transparent;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .tip-btn:hover {
+            background: var(--yellow);
+            border-color: var(--black);
+        }
+
+        .tip-btn.selected {
+            background: var(--yellow);
+            border-color: var(--black);
+        }
+
+        .image-upload-zone {
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius-xl);
+            padding: var(--space-8);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .image-upload-zone:hover {
+            border-color: var(--purple);
+            background: var(--gray-50);
+        }
+
+        .image-upload-zone.has-image {
+            border-style: solid;
+            border-color: var(--purple);
+            padding: 0;
+        }
+
+        #image-preview {
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .success-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-4);
+        }
+
+        .success-modal.hidden {
+            display: none;
+        }
+
+        .success-card {
+            background: var(--white);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-10);
+            max-width: 28rem;
+            text-align: center;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .success-icon {
+            width: 5rem;
+            height: 5rem;
+            background: var(--green-50);
+            color: var(--green-600);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-6);
+        }
+
+        /* Delivery Mode Cards */
+        .delivery-mode-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-6);
+            margin-top: var(--space-4);
+        }
+
+        .delivery-mode-card {
+            background: var(--white);
+            border: 3px solid var(--gray-200);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .delivery-mode-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .delivery-mode-card.active {
+            border-color: var(--purple);
+            background: linear-gradient(135deg, rgba(126, 63, 242, 0.05) 0%, var(--white) 100%);
+            box-shadow: 0 0 0 4px rgba(126, 63, 242, 0.1);
+        }
+
+        .delivery-mode-card.urgent-card.active {
+            border-color: var(--red-600);
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.08) 0%, var(--white) 100%);
+            box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+        }
+
+        .mode-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--space-4);
+        }
+
+        .mode-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+        }
+
+        .normal-icon {
+            background: linear-gradient(135deg, #EDE9FE 0%, #DDD6FE 100%);
+            color: var(--purple);
+        }
+
+        .urgent-icon {
+            background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+            color: var(--red-600);
+        }
+
+        .delivery-mode-card.active .mode-icon {
+            transform: scale(1.1);
+        }
+
+        .mode-badge {
+            padding: 0.375rem 0.875rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .normal-badge {
+            background: var(--gray-100);
+            color: var(--gray-700);
+        }
+
+        .urgent-badge {
+            background: linear-gradient(135deg, var(--red-600) 0%, #DC2626 100%);
+            color: var(--white);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .mode-title {
+            font-size: 1.5rem;
+            font-weight: 900;
+            margin-bottom: var(--space-3);
+            color: var(--gray-900);
+        }
+
+        .mode-price {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-3);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-4);
+        }
+
+        .price-label {
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .price-value {
+            font-size: 1.25rem;
+            font-weight: 900;
+            color: var(--purple);
+        }
+
+        .delivery-mode-card.urgent-card .price-value {
+            color: var(--red-600);
+        }
+
+        .mode-benefits {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .mode-benefits li {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-2) 0;
+            font-size: 0.875rem;
+            color: var(--gray-700);
+            font-weight: 500;
+        }
+
+        .mode-benefits i {
+            color: var(--green-600);
+            flex-shrink: 0;
+        }
+
+        .urgent-pulse {
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%);
+            animation: pulse-expand 3s ease-in-out infinite;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        .delivery-mode-card.urgent-card.active .urgent-pulse {
+            opacity: 1;
+        }
+
+        @keyframes pulse-expand {
+
+            0%,
+            100% {
+                transform: scale(0.8);
+                opacity: 0.3;
+            }
+
+            50% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .delivery-mode-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="index.html#categories" class="mobile-menu-link">Categories</a>
+            <a href="index.html#features" class="mobile-menu-link">Features</a>
+            <a href="dasher.html" class="mobile-menu-link">Become a Dasher</a>
+            <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
+        </nav>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#categories">Categories</a>
+                <a href="index.html#features">Features</a>
+                <a href="dasher.html">Become a Dasher</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn">
+                    <i data-lucide="shopping-bag" width="24"></i>
+                    <span class="cart-badge">2</span>
+                </button>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="form-container">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-black mb-4">Create a Request</h1>
+                <p style="color: var(--gray-600); font-size: 1.125rem;">
+                    Tell us what you need, and we'll find a dasher nearby to help you out.
+                </p>
+            </div>
+
+            <!-- Form Card -->
+            <div class="form-card" id="form-card">
+                <form id="request-form">
+                    <!-- Mode Toggle -->
+                    <div class="form-group">
+                        <label class="form-label" style="font-size: 1.25rem; margin-bottom: var(--space-4);">Delivery
+                            Mode</label>
+                        <div class="delivery-mode-cards">
+                            <div class="delivery-mode-card active" id="normal-card" data-mode="normal">
+                                <div class="mode-card-header">
+                                    <div class="mode-icon normal-icon">
+                                        <i data-lucide="package" width="24"></i>
+                                    </div>
+                                    <div class="mode-badge normal-badge">Standard</div>
+                                </div>
+                                <h3 class="mode-title">Normal</h3>
+                                <div class="mode-price">
+                                    <span class="price-label">Base Tip</span>
+                                    <span class="price-value">₹10-20</span>
+                                </div>
+                                <ul class="mode-benefits">
+                                    <li><i data-lucide="check" width="16"></i> Standard priority</li>
+                                    <li><i data-lucide="check" width="16"></i> Regular matching</li>
+                                    <li><i data-lucide="check" width="16"></i> 10-15 min delivery</li>
+                                </ul>
+                            </div>
+
+                            <div class="delivery-mode-card urgent-card" id="urgent-card" data-mode="urgent">
+                                <div class="mode-card-header">
+                                    <div class="mode-icon urgent-icon">
+                                        <i data-lucide="zap" width="24"></i>
+                                    </div>
+                                    <div class="mode-badge urgent-badge">
+                                        <i data-lucide="alert-triangle" width="12"></i>
+                                        <span>Priority</span>
+                                    </div>
+                                </div>
+                                <h3 class="mode-title">Urgent</h3>
+                                <div class="mode-price">
+                                    <span class="price-label">Extra Tip</span>
+                                    <span class="price-value">+₹10-30</span>
+                                </div>
+                                <ul class="mode-benefits">
+                                    <li><i data-lucide="check" width="16"></i> Top priority matching</li>
+                                    <li><i data-lucide="check" width="16"></i> Instant notifications</li>
+                                    <li><i data-lucide="check" width="16"></i> 5-8 min delivery</li>
+                                </ul>
+                                <div class="urgent-pulse"></div>
+                            </div>
+                        </div>
+                        <p class="text-sm mt-4" style="color: var(--gray-600); text-align: center;">
+                            <i data-lucide="info" width="14" style="display: inline; vertical-align: middle;"></i>
+                            Urgent mode prioritizes your request and adds extra reward for dashers
+                        </p>
+                    </div>
+
+                    <!-- Request Title -->
+                    <div class="form-group">
+                        <label for="title" class="form-label">Request Title *</label>
+                        <input type="text" id="title" class="form-input form-input-lg"
+                            placeholder="e.g., Pick up my charger from Room 302" required>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description *</label>
+                        <textarea id="description" class="form-textarea"
+                            placeholder="Provide details like exact location, item description, special instructions..."
+                            required></textarea>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="form-group">
+                        <label for="location" class="form-label">Pick-up Location *</label>
+                        <select id="location" class="form-select" required>
+                            <option value="">Select location...</option>
+                            <option value="hostel-a">Hostel Block A</option>
+                            <option value="hostel-b">Hostel Block B</option>
+                            <option value="hostel-c">Hostel Block C</option>
+                            <option value="hostel-d">Hostel Block D</option>
+                            <option value="library">Central Library</option>
+                            <option value="canteen">Main Canteen</option>
+                            <option value="lab-1">Lab Block 1</option>
+                            <option value="lab-2">Lab Block 2</option>
+                            <option value="admin">Admin Block</option>
+                            <option value="medical">Medical Store</option>
+                            <option value="xerox">Xerox Shop</option>
+                            <option value="sports">Sports Complex</option>
+                        </select>
+                    </div>
+
+                    <!-- Delivery Location -->
+                    <div class="form-group">
+                        <label for="delivery-location" class="form-label">Delivery Location *</label>
+                        <select id="delivery-location" class="form-select" required>
+                            <option value="">Select location...</option>
+                            <option value="hostel-a">Hostel Block A</option>
+                            <option value="hostel-b">Hostel Block B</option>
+                            <option value="hostel-c">Hostel Block C</option>
+                            <option value="hostel-d">Hostel Block D</option>
+                            <option value="library">Central Library</option>
+                            <option value="canteen">Main Canteen</option>
+                            <option value="lab-1">Lab Block 1</option>
+                            <option value="lab-2">Lab Block 2</option>
+                            <option value="lecture-hall">Lecture Hall</option>
+                            <option value="exam-hall">Exam Hall</option>
+                        </select>
+                    </div>
+
+                    <!-- Estimated Cost -->
+                    <div class="form-group">
+                        <label for="cost" class="form-label">Estimated Item Cost (₹)</label>
+                        <input type="number" id="cost" class="form-input" placeholder="0" min="0" step="1">
+                        <p class="text-sm mt-2" style="color: var(--gray-600);">
+                            Leave blank if no purchase required (e.g., picking up your own items).
+                        </p>
+                    </div>
+
+                    <!-- Tip Amount -->
+                    <div class="form-group">
+                        <label for="tip" class="form-label">Tip for Dasher (₹) *</label>
+                        <input type="number" id="tip" class="form-input" placeholder="15" min="10" step="1" value="15"
+                            required>
+                        <div class="tip-suggestions">
+                            <button type="button" class="tip-btn" onclick="setTip(10)">₹10</button>
+                            <button type="button" class="tip-btn selected" onclick="setTip(15)">₹15</button>
+                            <button type="button" class="tip-btn" onclick="setTip(20)">₹20</button>
+                            <button type="button" class="tip-btn" onclick="setTip(30)">₹30</button>
+                        </div>
+                        <p class="text-sm mt-2" style="color: var(--gray-600);">
+                            Higher tips attract dashers faster. Minimum ₹10.
+                        </p>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label class="form-label">Upload Image (Optional)</label>
+                        <div class="image-upload-zone" id="upload-zone"
+                            onclick="document.getElementById('image-input').click()">
+                            <div id="upload-placeholder">
+                                <i data-lucide="image" width="48"
+                                    style="color: var(--gray-400); margin: 0 auto var(--space-3);"></i>
+                                <p class="font-bold mb-2">Click to upload image</p>
+                                <p class="text-sm" style="color: var(--gray-600);">
+                                    Help dashers identify your item or location
+                                </p>
+                            </div>
+                            <div id="image-preview" class="hidden"></div>
+                        </div>
+                        <input type="file" id="image-input" accept="image/*" class="hidden">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-primary btn-lg btn-full mt-8">
+                        <i data-lucide="send" width="20"></i>
+                        Submit Request
+                    </button>
+                </form>
+            </div>
+
+            <!-- Info Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+                <div class="card text-center">
+                    <i data-lucide="clock" width="32" style="color: var(--purple); margin: 0 auto var(--space-3);"></i>
+                    <p class="font-bold mb-1">Fast Matching</p>
+                    <p class="text-sm" style="color: var(--gray-600);">Dashers notified instantly</p>
+                </div>
+                <div class="card text-center">
+                    <i data-lucide="shield-check" width="32"
+                        style="color: var(--green-600); margin: 0 auto var(--space-3);"></i>
+                    <p class="font-bold mb-1">Verified Dashers</p>
+                    <p class="text-sm" style="color: var(--gray-600);">All students verified</p>
+                </div>
+                <div class="card text-center">
+                    <i data-lucide="star" width="32" style="color: var(--yellow); margin: 0 auto var(--space-3);"></i>
+                    <p class="font-bold mb-1">Rated Service</p>
+                    <p class="text-sm" style="color: var(--gray-600);">4.8/5 average rating</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="success-modal" class="success-modal hidden">
+        <div class="success-card">
+            <div class="success-icon">
+                <i data-lucide="check-circle" width="48"></i>
+            </div>
+            <h2 class="text-3xl font-black mb-4">Request Submitted!</h2>
+            <p class="text-lg mb-6" style="color: var(--gray-600);">
+                We're finding the best dasher for you. You'll be notified when someone accepts.
+            </p>
+            <div class="badge badge-green mb-6" style="font-size: 0.875rem;">
+                <span style="width: 8px; height: 8px; background: var(--green-600); border-radius: 50%;"
+                    class="animate-pulse"></span>
+                Searching for dashers nearby...
+            </div>
+            <div style="display: flex; gap: var(--space-4); justify-content: center;">
+                <a href="tracking.html" class="btn btn-primary">
+                    Track Request <i data-lucide="arrow-right" width="18"></i>
+                </a>
+                <a href="index.html" class="btn btn-outline">
+                    Back to Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="shared.js"></script>
+    <script>
+        // Mode Toggle - Card Based
+        const normalCard = document.getElementById('normal-card');
+        const urgentCard = document.getElementById('urgent-card');
+        const formCard = document.getElementById('form-card');
+        const tipInput = document.getElementById('tip');
+
+        let currentMode = 'normal';
+
+        normalCard.addEventListener('click', () => {
+            if (currentMode === 'normal') return;
+
+            currentMode = 'normal';
+            normalCard.classList.add('active');
+            urgentCard.classList.remove('active');
+            formCard.classList.remove('urgent-mode');
+
+            // Reset tip to normal range
+            const currentTip = parseInt(tipInput.value) || 15;
+            if (currentTip > 20) {
+                tipInput.value = 15;
+            }
+        });
+
+        urgentCard.addEventListener('click', () => {
+            if (currentMode === 'urgent') return;
+
+            currentMode = 'urgent';
+            urgentCard.classList.add('active');
+            normalCard.classList.remove('active');
+            formCard.classList.add('urgent-mode');
+
+            // Increase tip for urgent mode
+            const currentTip = parseInt(tipInput.value) || 15;
+            tipInput.value = Math.max(currentTip + 10, 20);
+        });
+
+        // Tip Selection
+        function setTip(amount) {
+            document.getElementById('tip').value = amount;
+            document.querySelectorAll('.tip-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            event.target.classList.add('selected');
+        }
+
+        // Image Upload
+        const imageInput = document.getElementById('image-input');
+        const uploadZone = document.getElementById('upload-zone');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const imagePreview = document.getElementById('image-preview');
+
+        imageInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    uploadZone.classList.add('has-image');
+                    uploadPlaceholder.classList.add('hidden');
+                    imagePreview.classList.remove('hidden');
+                    imagePreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width: 100%; height: 300px; object-fit: cover;">`;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Form Submission
+        const form = document.getElementById('request-form');
+        const successModal = document.getElementById('success-modal');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Validate form
+            if (!DashDrop.validateForm('request-form')) {
+                DashDrop.showToast('Please fill in all required fields', 'error');
+                return;
+            }
+
+            // Show success modal
+            successModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+
+            // Reset form
+            setTimeout(() => {
+                form.reset();
+                // Reset to normal mode
+                currentMode = 'normal';
+                normalCard.classList.add('active');
+                urgentCard.classList.remove('active');
+                formCard.classList.remove('urgent-mode');
+                uploadZone.classList.remove('has-image');
+                uploadPlaceholder.classList.remove('hidden');
+                imagePreview.classList.add('hidden');
+            }, 500);
+        });
+
+        // Close modal on background click
+        successModal.addEventListener('click', function (e) {
+            if (e.target === successModal) {
+                successModal.classList.add('hidden');
+                document.body.style.overflow = '';
+            }
+        });
+    </script>
+</body>
+
+</html>

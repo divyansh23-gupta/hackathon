@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Canteen QR – DashDrop</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .upload-container {
+            max-width: 48rem;
+            margin: var(--space-16) auto;
+            padding: 0 var(--space-4);
+        }
+
+        .qr-upload-zone {
+            border: 3px dashed var(--purple);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-16);
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            background: linear-gradient(to bottom, #FAF5FF, var(--white));
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-8);
+        }
+
+        .qr-upload-zone:hover {
+            border-color: var(--yellow);
+            background: linear-gradient(to bottom, #FEFCE8, var(--white));
+            transform: scale(1.02);
+        }
+
+        .qr-upload-zone.has-image {
+            border-style: solid;
+            border-color: var(--green-600);
+            background: var(--white);
+            padding: var(--space-6);
+            min-height: auto;
+        }
+
+        .qr-preview-card {
+            background: var(--white);
+            border: 2px solid var(--purple);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .qr-preview-image {
+            max-width: 100%;
+            max-height: 400px;
+            border-radius: var(--radius-xl);
+            margin: var(--space-4) auto;
+            display: block;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
+            padding: var(--space-6);
+            border-radius: var(--radius-xl);
+            margin-bottom: var(--space-8);
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .step-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-number {
+            width: 2rem;
+            height: 2rem;
+            background: var(--black);
+            color: var(--yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .mode-toggle-btn.urgent-active {
+            background: var(--red-600);
+            color: var(--white);
+            border-color: var(--red-600);
+        }
+
+        .disclaimer {
+            background: var(--gray-50);
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            border-left: 4px solid var(--purple);
+            margin-top: var(--space-4);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="food.html" class="mobile-menu-link">Food & Snacks</a>
+            <a href="request.html" class="mobile-menu-link">Create Request</a>
+            <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
+        </nav>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="food.html">Food & Snacks</a>
+                <a href="index.html#categories">Categories</a>
+            </div>
+            <div class="nav-actions">
+                <button class="icon-btn">
+                    <i data-lucide="shopping-bag" width="24"></i>
+                    <span class="cart-badge">2</span>
+                </button>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <div class="upload-container">
+            <!-- Header -->
+            <div class="text-center mb-8">
+                <h1 class="text-4xl font-black mb-4">Upload Canteen QR for Pickup</h1>
+                <p style="color: var(--gray-600); font-size: 1.125rem; max-width: 36rem; margin: 0 auto;">
+                    Already ordered in the official canteen app? Upload your QR screenshot and we'll pick it up for you.
+                </p>
+            </div>
+
+            <!-- Info Box -->
+            <div class="info-box">
+                <div class="step-row">
+                    <div class="step-number">1</div>
+                    <p class="font-bold">Order in official campus canteen app</p>
+                </div>
+                <div class="step-row">
+                    <div class="step-number">2</div>
+                    <p class="font-bold">Receive QR code</p>
+                </div>
+                <div class="step-row">
+                    <div class="step-number">3</div>
+                    <p class="font-bold">Upload QR screenshot here</p>
+                </div>
+                <div class="step-row">
+                    <div class="step-number">4</div>
+                    <p class="font-bold">Our dasher picks up & delivers</p>
+                </div>
+            </div>
+
+            <!-- Upload Form -->
+            <form id="qr-upload-form">
+                <!-- QR Code Upload Zone -->
+                <div class="qr-upload-zone" id="qr-upload-zone" onclick="document.getElementById('qr-input').click()">
+                    <div id="upload-placeholder">
+                        <i data-lucide="upload" width="80"
+                            style="color: var(--purple); margin-bottom: var(--space-4);"></i>
+                        <p class="font-black text-2xl mb-3">Click to upload your QR screenshot</p>
+                        <p class="text-sm" style="color: var(--gray-600);">
+                            JPG, PNG, or screenshot from canteen app
+                        </p>
+                    </div>
+                </div>
+                <input type="file" id="qr-input" accept="image/*" class="hidden" required>
+
+                <!-- Preview Card (Hidden Initially) -->
+                <div id="preview-card" class="qr-preview-card hidden">
+                    <h3 class="font-black text-xl mb-4 text-center">Preview of Your Canteen Order</h3>
+                    <img src="" alt="QR Code Preview" class="qr-preview-image" id="qr-preview-img">
+                    <div class="disclaimer">
+                        <p class="text-sm" style="color: var(--gray-700);">
+                            <i data-lucide="info" width="16" style="display: inline; margin-right: 4px;"></i>
+                            <strong>Dasher will view your QR to collect the order.</strong> Please keep it clear and
+                            readable.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Delivery Details Section (Only shows after QR upload) -->
+                <div id="delivery-section" class="hidden">
+                    <h3 class="font-black text-2xl mb-6">Delivery Details</h3>
+
+                    <!-- Delivery Location -->
+                    <div class="form-group">
+                        <label for="delivery-location" class="form-label">
+                            <i data-lucide="map-pin" width="18" style="display: inline; margin-right: 4px;"></i>
+                            Delivery Location *
+                        </label>
+                        <select id="delivery-location" class="form-select form-input-lg" required>
+                            <option value="">Select delivery location...</option>
+                            <option value="Hostel Block A">Hostel Block A</option>
+                            <option value="Hostel Block B">Hostel Block B</option>
+                            <option value="Hostel Block C">Hostel Block C</option>
+                            <option value="Hostel Block D">Hostel Block D</option>
+                            <option value="Library">Central Library</option>
+                            <option value="Lab Block 1">Lab Block 1</option>
+                            <option value="Lab Block 2">Lab Block 2</option>
+                            <option value="Lecture Hall">Lecture Hall</option>
+                        </select>
+                    </div>
+
+                    <!-- Room / Exact Spot -->
+                    <div class="form-group">
+                        <label for="room-number" class="form-label">Room / Exact Spot (Optional)</label>
+                        <input type="text" id="room-number" class="form-input"
+                            placeholder="e.g., Room 405, Study Room 2">
+                    </div>
+
+                    <!-- Tip Amount -->
+                    <div class="form-group">
+                        <label for="tip" class="form-label">
+                            <i data-lucide="coins" width="18" style="display: inline; margin-right: 4px;"></i>
+                            Tip for Dasher (₹) *
+                        </label>
+                        <input type="number" id="tip" class="form-input form-input-lg" placeholder="20" min="15"
+                            step="5" value="20" required>
+                        <div style="display: flex; gap: var(--space-3); margin-top: var(--space-3); flex-wrap: wrap;">
+                            <button type="button" class="chip" onclick="setTip(15)">₹15</button>
+                            <button type="button" class="chip chip-selected" onclick="setTip(20)">₹20</button>
+                            <button type="button" class="chip" onclick="setTip(25)">₹25</button>
+                            <button type="button" class="chip" onclick="setTip(30)">₹30</button>
+                        </div>
+                    </div>
+
+                    <!-- Delivery Mode -->
+                    <div class="form-group">
+                        <label class="form-label">Delivery Mode</label>
+                        <div class="mode-toggle-group">
+                            <button type="button" class="mode-toggle-btn active" id="normal-btn">
+                                <i data-lucide="package" width="16"></i> Normal
+                            </button>
+                            <button type="button" class="mode-toggle-btn" id="urgent-btn">
+                                <i data-lucide="zap" width="16"></i> Urgent (+₹15)
+                            </button>
+                        </div>
+                        <p class="text-sm mt-2" style="color: var(--gray-600);">
+                            Urgent mode prioritizes your pickup and adds ₹15 extra tip for dashers.
+                        </p>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-lg btn-full mt-8"
+                        style="background: var(--black); color: var(--yellow); font-size: 1.125rem; padding: 1rem;">
+                        <i data-lucide="check-circle" width="24"></i>
+                        Create Pickup Request
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="food.html" class="footer-link">Food & Snacks</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="shared.js"></script>
+    <script>
+        let qrImageData = null;
+        let isUrgent = false;
+
+        // QR Code Upload
+        const qrInput = document.getElementById('qr-input');
+        const uploadZone = document.getElementById('qr-upload-zone');
+        const uploadPlaceholder = document.getElementById('upload-placeholder');
+        const previewCard = document.getElementById('preview-card');
+        const previewImg = document.getElementById('qr-preview-img');
+        const deliverySection = document.getElementById('delivery-section');
+
+        qrInput.addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    qrImageData = e.target.result;
+
+                    // Hide upload zone
+                    uploadZone.classList.add('hidden');
+
+                    // Show preview card
+                    previewCard.classList.remove('hidden');
+                    previewImg.src = e.target.result;
+
+                    // Show delivery section
+                    deliverySection.classList.remove('hidden');
+
+                    // Reinitialize icons
+                    lucide.createIcons();
+
+                    // Scroll to delivery section
+                    setTimeout(() => {
+                        deliverySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 300);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Mode Toggle
+        const normalBtn = document.getElementById('normal-btn');
+        const urgentBtn = document.getElementById('urgent-btn');
+        const tipInput = document.getElementById('tip');
+
+        urgentBtn.addEventListener('click', () => {
+            normalBtn.classList.remove('active');
+            urgentBtn.classList.add('active', 'urgent-active');
+            isUrgent = true;
+            const currentTip = parseInt(tipInput.value) || 20;
+            if (!urgentBtn.dataset.adjusted) {
+                tipInput.value = currentTip + 15;
+                urgentBtn.dataset.adjusted = 'true';
+            }
+        });
+
+        normalBtn.addEventListener('click', () => {
+            urgentBtn.classList.remove('active', 'urgent-active');
+            normalBtn.classList.add('active');
+            isUrgent = false;
+            if (urgentBtn.dataset.adjusted) {
+                const currentTip = parseInt(tipInput.value) || 35;
+                tipInput.value = Math.max(15, currentTip - 15);
+                delete urgentBtn.dataset.adjusted;
+            }
+        });
+
+        // Tip Selection
+        function setTip(amount) {
+            document.getElementById('tip').value = amount;
+            document.querySelectorAll('.chip').forEach(btn => {
+                btn.classList.remove('chip-selected');
+            });
+            event.target.classList.add('chip-selected');
+        }
+
+        // Form Submission
+        const form = document.getElementById('qr-upload-form');
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (!qrImageData) {
+                DashDrop.showToast('Please upload your QR code', 'error');
+                return;
+            }
+
+            const deliveryLocation = document.getElementById('delivery-location').value;
+            if (!deliveryLocation) {
+                DashDrop.showToast('Please select delivery location', 'error');
+                return;
+            }
+
+            const tip = parseInt(document.getElementById('tip').value);
+            if (!tip || tip < 15) {
+                DashDrop.showToast('Minimum tip is ₹15', 'error');
+                return;
+            }
+
+            // Create pickup request object
+            const pickupRequest = {
+                id: DashDrop.generateId(),
+                qrImage: qrImageData,
+                deliveryLocation: deliveryLocation,
+                roomNumber: document.getElementById('room-number').value,
+                tip: tip,
+                mode: isUrgent ? 'urgent' : 'normal',
+                pickupPoint: 'Food Court / Canteen',
+                status: 'pending',
+                createdAt: new Date().toISOString()
+            };
+
+            // Store in localStorage (mock database)
+            localStorage.setItem('currentPickupRequest', JSON.stringify(pickupRequest));
+
+            // Show success and redirect
+            DashDrop.showToast('Pickup request created!', 'success');
+
+            setTimeout(() => {
+                window.location.href = `task.html?id=${pickupRequest.id}`;
+            }, 1000);
+        });
+    </script>
+</body>
+
+</html>

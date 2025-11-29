@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food & Snacks – DashDrop</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .category-header {
+            background: linear-gradient(135deg, #FFEDD5 0%, #FFF7ED 100%);
+            padding: var(--space-16) var(--space-4);
+            text-align: center;
+        }
+
+        .category-icon-large {
+            width: 80px;
+            height: 80px;
+            background: var(--orange-500);
+            color: var(--white);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-4);
+            font-size: 2.5rem;
+        }
+
+        .item-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .item-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .item-image {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--gray-100) 0%, var(--gray-200) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+        }
+
+        .item-info {
+            padding: var(--space-4);
+        }
+
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            background: var(--green-50);
+            color: var(--green-600);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: var(--space-6);
+        }
+
+        .live-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .live-item {
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            animation: slideInRight 0.5s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="request.html" class="mobile-menu-link">Create Request</a>
+            <a href="index.html#categories" class="mobile-menu-link">All Categories</a>
+            <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
+        </nav>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#categories">Categories</a>
+                <a href="request.html">Create Request</a>
+            </div>
+            <div class="nav-actions">
+                <button class="icon-btn">
+                    <i data-lucide="shopping-bag" width="24"></i>
+                    <span class="cart-badge">2</span>
+                </button>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Category Header -->
+        <section class="category-header">
+            <div class="container">
+                <div class="category-icon-large">
+                    <i data-lucide="coffee" width="48"></i>
+                </div>
+                <h1 class="text-4xl font-black mb-4">Food & Snacks</h1>
+                <p class="text-lg" style="color: var(--gray-700); max-width: 42rem; margin: 0 auto;">
+                    Order via the official canteen app, upload your QR code, and we'll pick it up and deliver to you!
+                </p>
+            </div>
+        </section>
+
+        <!-- Search Within Category -->
+        <section class="section-sm">
+            <div class="container" style="max-width: 56rem;">
+                <div style="position: relative;">
+                    <input type="text" placeholder="Search within Food & Snacks..." class="form-input form-input-lg"
+                        style="padding-left: 3.5rem;">
+                    <i data-lucide="search" width="24"
+                        style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- Availability Indicator -->
+        <section class="section-sm" style="padding-top: 0;">
+            <div class="container text-center">
+                <div class="availability-badge" style="margin: 0 auto;">
+                    <span style="width: 8px; height: 8px; background: var(--green-600); border-radius: 50%;"
+                        class="animate-pulse"></span>
+                    4 Dashers Nearby • High Availability Right Now
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Items Grid -->
+        <section class="section">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-8">Popular Items</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                    <!-- Item 1 -->
+                    <div class="item-card">
+                        <div class="item-image">☕</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Cold Coffee</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">4-8 mins delivery</p>
+                            <a href="upload-qr.html?item=Cold%20Coffee" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 2 -->
+                    <div class="item-card">
+                        <div class="item-image">🥟</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Samosa</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">3-6 mins delivery</p>
+                            <a href="upload-qr.html?item=Samosa" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 3 -->
+                    <div class="item-card">
+                        <div class="item-image">🌯</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Paneer Roll</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">5-10 mins delivery</p>
+                            <a href="upload-qr.html?item=Paneer%20Roll" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 4 -->
+                    <div class="item-card">
+                        <div class="item-image">🍜</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Maggi</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">6-10 mins delivery</p>
+                            <a href="upload-qr.html?item=Maggi" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 5 -->
+                    <div class="item-card">
+                        <div class="item-image">🍔</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Burger</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">5-8 mins delivery</p>
+                            <a href="upload-qr.html?item=Burger" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 6 -->
+                    <div class="item-card">
+                        <div class="item-image">🥪</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Veg Sandwich</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">4-7 mins delivery</p>
+                            <a href="upload-qr.html?item=Veg%20Sandwich" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 7 -->
+                    <div class="item-card">
+                        <div class="item-image">🧃</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Fruit Juice</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">3-6 mins delivery</p>
+                            <a href="upload-qr.html?item=Fruit%20Juice" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+
+                    <!-- Item 8 -->
+                    <div class="item-card">
+                        <div class="item-image">🥞</div>
+                        <div class="item-info">
+                            <h3 class="font-black text-lg mb-1">Masala Dosa</h3>
+                            <p class="text-sm mb-2" style="color: var(--gray-600);">8-12 mins delivery</p>
+                            <a href="upload-qr.html?item=Masala%20Dosa" class="btn btn-secondary btn-sm btn-full"
+                                style="text-decoration: none;">Order via Official App</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Request Templates -->
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-6">Quick Request Templates</h2>
+                <div class="chip-container">
+                    <button class="chip">Pick up food from canteen</button>
+                    <button class="chip">Deliver snacks to hostel</button>
+                    <button class="chip">Buy energy drink</button>
+                    <button class="chip">Get cold coffee from cafe</button>
+                    <button class="chip">Bring breakfast to room</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- QR Upload Section -->
+        <section class="section">
+            <div class="container" style="max-width: 56rem;">
+                <div class="card"
+                    style="background: linear-gradient(135deg, #F3E8FF 0%, var(--white) 100%); border: 2px solid var(--purple);">
+                    <div style="text-align: center; margin-bottom: var(--space-6);">
+                        <i data-lucide="qr-code" width="48"
+                            style="color: var(--purple); margin-bottom: var(--space-3);"></i>
+                        <h3 class="text-2xl font-black mb-3">Already Ordered? Upload Your QR Code</h3>
+                        <p style="color: var(--gray-600);">
+                            If you've already ordered via the official canteen app, upload your QR code here and we'll
+                            pick it up for you!
+                        </p>
+                    </div>
+
+                    <div
+                        style="background: var(--white); padding: var(--space-6); border-radius: var(--radius-xl); margin-bottom: var(--space-4);">
+                        <div
+                            style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-3); margin-bottom: var(--space-4);">
+                            <div
+                                style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-lg); text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: var(--space-2);">1️⃣</div>
+                                <p class="text-sm font-bold">Order via canteen app</p>
+                            </div>
+                            <div
+                                style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-lg); text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: var(--space-2);">2️⃣</div>
+                                <p class="text-sm font-bold">Upload QR code</p>
+                            </div>
+                            <div
+                                style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-lg); text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: var(--space-2);">3️⃣</div>
+                                <p class="text-sm font-bold">We pick it up</p>
+                            </div>
+                            <div
+                                style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-lg); text-align: center;">
+                                <div style="font-size: 2rem; margin-bottom: var(--space-2);">4️⃣</div>
+                                <p class="text-sm font-bold">Delivered to you!</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="upload-qr.html" class="btn btn-primary btn-lg btn-full">
+                        <i data-lucide="upload" width="20"></i>
+                        Upload Canteen QR Code
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Recent Requests -->\n <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-6">Live Recent Requests</h2>
+                <div class="live-feed">
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <div style="flex: 1;">
+                            <p class="text-sm"><strong>Cold Coffee</strong> delivered to Hostel B</p>
+                            <div class="badge badge-yellow" style="font-size: 0.75rem; margin-top: 4px;">
+                                <i data-lucide="qr-code" width="12"></i> QR Pickup
+                            </div>
+                        </div>
+                        <span class="text-sm" style="color: var(--gray-500);">2 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="zap" width="20" style="color: var(--red-600);"></i>
+                        <div style="flex: 1;">
+                            <p class="text-sm"><strong>Urgent: Maggi</strong> accepted by Rahul</p>
+                            <div class="badge badge-yellow" style="font-size: 0.75rem; margin-top: 4px;">
+                                <i data-lucide="qr-code" width="12"></i> QR Available
+                            </div>
+                        </div>
+                        <span class="text-sm" style="color: var(--gray-500);">5 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <div style="flex: 1;">
+                            <p class="text-sm"><strong>Samosa & Tea</strong> delivered to Lab 302</p>
+                            <div class="badge badge-yellow" style="font-size: 0.75rem; margin-top: 4px;">
+                                <i data-lucide="qr-code" width="12"></i> QR Pickup
+                            </div>
+                        </div>
+                        <span class="text-sm" style="color: var(--gray-500);">8 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="package" width="20" style="color: var(--purple);"></i>
+                        <div style="flex: 1;">
+                            <p class="text-sm"><strong>Paneer Roll</strong> being picked up from canteen</p>
+                            <div class="badge badge-green" style="font-size: 0.75rem; margin-top: 4px;">
+                                <i data-lucide="qr-code" width="12"></i> QR Available
+                            </div>
+                        </div>
+                        <span class="text-sm" style="color: var(--gray-500);">10 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <div style="flex: 1;">
+                            <p class="text-sm"><strong>Burger</strong> delivered to Library</p>
+                            <div class="badge badge-yellow" style="font-size: 0.75rem; margin-top: 4px;">
+                                <i data-lucide="qr-code" width="12"></i> QR Pickup
+                            </div>
+                        </div>
+                        <span class="text-sm" style="color: var(--gray-500);">15 mins ago</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom CTAs -->
+        <section class="section">
+            <div class="container text-center">
+                <h2 class="text-3xl font-black mb-6">Ready to Order?</h2>
+                <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                    <a href="request.html" class="btn btn-primary btn-lg">
+                        Post a Request in Food & Snacks
+                    </a>
+                    <a href="dasher.html" class="btn btn-secondary btn-lg">
+                        Become a Dasher for Food
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="shared.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Community – DashDrop</title>
+    <meta name="description" content="Connect with your campus community. Discuss, chat, and help each other.">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared.css">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#FFD300">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/manifest.json">
+
+    <style>
+        /* Community Hub Styles */
+        .community-hero {
+            background: linear-gradient(135deg, var(--purple) 0%, #9333EA 100%);
+            color: var(--white);
+            padding: var(--space-12) var(--space-4);
+            text-align: center;
+        }
+
+        .community-hero h1 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            margin-bottom: var(--space-4);
+        }
+
+        .community-hero p {
+            font-size: 1.125rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            background: var(--white);
+            border-bottom: 2px solid var(--gray-200);
+            position: sticky;
+            top: 64px;
+            z-index: 40;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-nav-wrapper {
+            max-width: 80rem;
+            margin: 0 auto;
+            padding: 0 var(--space-4);
+            display: flex;
+            gap: var(--space-2);
+        }
+
+        .tab-btn {
+            padding: var(--space-4) var(--space-6);
+            border: none;
+            background: transparent;
+            font-weight: 700;
+            color: var(--gray-600);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all var(--transition-base);
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .tab-btn:hover {
+            color: var(--purple);
+            background: var(--gray-50);
+        }
+
+        .tab-btn.active {
+            color: var(--purple);
+            border-bottom-color: var(--purple);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Discussion Thread Card */
+        .discussion-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .discussion-card:hover {
+            border-color: var(--purple);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+        }
+
+        .discussion-header {
+            display: flex;
+            align-items: start;
+            gap: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .discussion-avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.125rem;
+            flex-shrink: 0;
+        }
+
+        .discussion-meta {
+            display: flex;
+            gap: var(--space-2);
+            align-items: center;
+            flex-wrap: wrap;
+            font-size: 0.875rem;
+            color: var(--gray-600);
+        }
+
+        .discussion-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            margin-bottom: var(--space-2);
+            color: var(--gray-900);
+        }
+
+        .discussion-excerpt {
+            color: var(--gray-600);
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+
+        .discussion-stats {
+            display: flex;
+            gap: var(--space-6);
+            align-items: center;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+            font-size: 0.875rem;
+            color: var(--gray-600);
+            font-weight: 600;
+        }
+
+        .upvote-btn {
+            display: flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 0.375rem 0.75rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-full);
+            background: var(--white);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .upvote-btn:hover {
+            border-color: var(--purple);
+            background: var(--gray-50);
+        }
+
+        .upvote-btn.upvoted {
+            border-color: var(--purple);
+            background: #F3E8FF;
+            color: var(--purple);
+        }
+
+        /* Category Filter */
+        .filter-bar {
+            display: flex;
+            gap: var(--space-3);
+            margin-bottom: var(--space-6);
+            overflow-x: auto;
+            padding-bottom: var(--space-2);
+        }
+
+        .filter-chip {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--gray-300);
+            border-radius: var(--radius-full);
+            background: var(--white);
+            cursor: pointer;
+            transition: all var(--transition-base);
+            font-weight: 700;
+            font-size: 0.875rem;
+            white-space: nowrap;
+        }
+
+        .filter-chip:hover {
+            border-color: var(--purple);
+            background: var(--gray-50);
+        }
+
+        .filter-chip.active {
+            border-color: var(--purple);
+            background: var(--purple);
+            color: var(--white);
+        }
+
+        /* Chat Styles */
+        .chat-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-6);
+            height: calc(100vh - 400px);
+            min-height: 500px;
+        }
+
+        .chat-rooms {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            overflow-y: auto;
+        }
+
+        .chat-room-item {
+            padding: var(--space-4);
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-bottom: var(--space-2);
+        }
+
+        .chat-room-item:hover {
+            background: var(--gray-50);
+        }
+
+        .chat-room-item.active {
+            background: var(--purple);
+            color: var(--white);
+        }
+
+        .chat-room-name {
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+
+        .chat-room-users {
+            font-size: 0.75rem;
+            opacity: 0.8;
+        }
+
+        .chat-messages {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-4);
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .chat-message {
+            display: flex;
+            gap: var(--space-3);
+            align-items: start;
+        }
+
+        .chat-message.own {
+            flex-direction: row-reverse;
+        }
+
+        .chat-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        .chat-bubble {
+            background: var(--gray-100);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            max-width: 70%;
+        }
+
+        .chat-message.own .chat-bubble {
+            background: var(--purple);
+            color: var(--white);
+        }
+
+        .chat-sender {
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: var(--space-1);
+        }
+
+        .chat-text {
+            line-height: 1.5;
+        }
+
+        .chat-time {
+            font-size: 0.75rem;
+            opacity: 0.7;
+            margin-top: var(--space-1);
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: var(--space-3);
+            margin-top: var(--space-4);
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-full);
+            outline: none;
+            transition: border-color var(--transition-base);
+        }
+
+        .chat-input:focus {
+            border-color: var(--purple);
+        }
+
+        .chat-send-btn {
+            padding: var(--space-3);
+            background: var(--purple);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Update Feed */
+        .update-card {
+            background: var(--white);
+            border-left: 4px solid var(--gray-300);
+            border-radius: var(--radius-lg);
+            padding: var(--space-6);
+            margin-bottom: var(--space-4);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .update-card.announcement {
+            border-left-color: var(--blue-600);
+        }
+
+        .update-card.event {
+            border-left-color: var(--purple);
+        }
+
+        .update-card.alert {
+            border-left-color: var(--red-600);
+        }
+
+        .update-card.news {
+            border-left-color: var(--green-600);
+        }
+
+        .update-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-3);
+        }
+
+        .update-title {
+            font-weight: 800;
+            font-size: 1.125rem;
+            margin-bottom: var(--space-2);
+        }
+
+        .update-body {
+            color: var(--gray-700);
+            line-height: 1.6;
+        }
+
+        .update-time {
+            font-size: 0.875rem;
+            color: var(--gray-500);
+            margin-top: var(--space-3);
+        }
+
+        /* Help Request Card */
+        .help-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            margin-bottom: var(--space-4);
+            transition: all var(--transition-base);
+        }
+
+        .help-card:hover {
+            border-color: var(--purple);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .help-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: var(--space-4);
+        }
+
+        .help-status {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: 0.25rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 0.75rem;
+            font-weight: 800;
+        }
+
+        .help-status.open {
+            background: var(--blue-50);
+            color: var(--blue-600);
+        }
+
+        .help-status.answered {
+            background: var(--green-50);
+            color: var(--green-600);
+        }
+
+        .help-status.resolved {
+            background: var(--gray-100);
+            color: var(--gray-600);
+        }
+
+        .help-title {
+            font-weight: 800;
+            font-size: 1.125rem;
+            margin-bottom: var(--space-3);
+        }
+
+        .help-description {
+            color: var(--gray-700);
+            line-height: 1.6;
+            margin-bottom: var(--space-4);
+        }
+
+        .help-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: var(--space-4);
+            border-top: 1px solid var(--gray-200);
+        }
+
+        @media (min-width: 768px) {
+            .chat-container {
+                grid-template-columns: 300px 1fr;
+            }
+        }
+
+        /* Floating Action Button */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: var(--space-6);
+            width: 64px;
+            height: 64px;
+            background: var(--purple);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            box-shadow: var(--shadow-2xl);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+            z-index: 30;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 30px 60px -15px rgba(126, 63, 242, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .fab {
+                bottom: 80px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="index.html#categories" class="mobile-menu-link">Categories</a>
+            <a href="community.html" class="mobile-menu-link" style="color: var(--purple);">Community</a>
+            <a href="index.html#urgent" class="mobile-menu-link" style="color: var(--red-500);">Urgent</a>
+            <a href="login.html" class="btn btn-yellow btn-lg" style="text-decoration: none;">Login / Sign Up</a>
+        </nav>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#categories">Categories</a>
+                <a href="community.html" style="color: var(--purple);">Community</a>
+                <a href="index.html#urgent" style="color: var(--red-600);">Urgent</a>
+                <a href="login.html"
+                    style="background: var(--black); color: var(--white); padding: 0.5rem 1.5rem; border-radius: var(--radius-lg); font-weight: 700; text-decoration: none;">Login</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn">
+                    <i data-lucide="shopping-bag" width="24"></i>
+                    <span class="cart-badge">2</span>
+                </button>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="community-hero">
+            <h1>Campus Community Hub</h1>
+            <p>Connect, discuss, and help each other. Your campus community in one place.</p>
+        </section>
+
+        <!-- Tab Navigation -->
+        <div class="tab-nav">
+            <div class="tab-nav-wrapper">
+                <button class="tab-btn active" data-tab="chat">
+                    <i data-lucide="message-circle" width="20"></i>
+                    Campus Chat
+                </button>
+                <button class="tab-btn" data-tab="updates">
+                    <i data-lucide="bell" width="20"></i>
+                    Updates
+                </button>
+            </div>
+        </div>
+
+        <!-- Campus Chat Tab -->
+        <section id="chat-tab" class="tab-content active section">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-8">Campus Chat Rooms</h2>
+
+                <div class="chat-container">
+                    <!-- Chat Rooms List -->
+                    <div class="chat-rooms">
+                        <h3 class="font-bold mb-4">Active Rooms</h3>
+                        <div class="chat-room-item active" data-room="general">
+                            <div class="chat-room-name">🌐 General Chat</div>
+                            <div class="chat-room-users">127 online</div>
+                        </div>
+                        <div class="chat-room-item" data-room="study">
+                            <div class="chat-room-name">📚 Study Groups</div>
+                            <div class="chat-room-users">45 online</div>
+                        </div>
+                        <div class="chat-room-item" data-room="events">
+                            <div class="chat-room-name">🎉 Events & Fests</div>
+                            <div class="chat-room-users">89 online</div>
+                        </div>
+                        <div class="chat-room-item" data-room="hostel">
+                            <div class="chat-room-name">🏠 Hostel Life</div>
+                            <div class="chat-room-users">62 online</div>
+                        </div>
+                        <div class="chat-room-item" data-room="tech">
+                            <div class="chat-room-name">💻 Tech Help</div>
+                            <div class="chat-room-users">34 online</div>
+                        </div>
+                    </div>
+
+                    <!-- Chat Messages Area -->
+                    <div>
+                        <div class="chat-messages" id="chat-messages">
+                            <!-- Sample Messages -->
+                            <div class="chat-message">
+                                <div class="chat-avatar">RK</div>
+                                <div>
+                                    <div class="chat-bubble">
+                                        <div class="chat-sender">Rahul Kumar</div>
+                                        <div class="chat-text">Hey everyone! Anyone up for a basketball match this
+                                            evening?</div>
+                                        <div class="chat-time">2:45 PM</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chat-message">
+                                <div class="chat-avatar">PM</div>
+                                <div>
+                                    <div class="chat-bubble">
+                                        <div class="chat-sender">Priya Mehta</div>
+                                        <div class="chat-text">Count me in! What time?</div>
+                                        <div class="chat-time">2:47 PM</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chat-message own">
+                                <div class="chat-avatar">ME</div>
+                                <div>
+                                    <div class="chat-bubble">
+                                        <div class="chat-sender">You</div>
+                                        <div class="chat-text">I'm in too! Let's meet at 5 PM?</div>
+                                        <div class="chat-time">2:48 PM</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="chat-message">
+                                <div class="chat-avatar">SK</div>
+                                <div>
+                                    <div class="chat-bubble">
+                                        <div class="chat-sender">Sneha Kapoor</div>
+                                        <div class="chat-text">Perfect! See you all there 🏀</div>
+                                        <div class="chat-time">2:50 PM</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Chat Input -->
+                        <div class="chat-input-container">
+                            <input type="text" class="chat-input" id="chat-input" placeholder="Type a message...">
+                            <button class="chat-send-btn" id="chat-send-btn">
+                                <i data-lucide="send" width="20"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Updates Tab -->
+        <section id="updates-tab" class="tab-content section">
+            <div class="container" style="max-width: 56rem;">
+                <h2 class="text-3xl font-black mb-8">Campus Updates</h2>
+
+                <!-- Update 1 -->
+                <div class="update-card alert">
+                    <div class="update-header">
+                        <span class="badge badge-red">
+                            <i data-lucide="alert-triangle" width="12"></i> ALERT
+                        </span>
+                    </div>
+                    <h3 class="update-title">Emergency: Campus Gate Closure</h3>
+                    <div class="update-body">
+                        The East Gate will be closed for maintenance from 6 PM to 8 PM today. Please use the
+                        Main Gate
+                        for entry/exit during this time.
+                    </div>
+                    <div class="update-time">
+                        <i data-lucide="clock" width="14"></i> 1 hour ago
+                    </div>
+                </div>
+
+                <!-- Update 2 -->
+                <div class="update-card event">
+                    <div class="update-header">
+                        <span class="badge badge-purple">
+                            <i data-lucide="calendar" width="12"></i> EVENT
+                        </span>
+                    </div>
+                    <h3 class="update-title">Tech Fest 2025 Registration Open!</h3>
+                    <div class="update-body">
+                        Annual Tech Fest registrations are now live! Register your team by March 15th. Multiple
+                        categories including hackathon, robotics, and coding competitions. Prize pool worth ₹5
+                        lakhs!
+                    </div>
+                    <div class="update-time">
+                        <i data-lucide="clock" width="14"></i> 3 hours ago
+                    </div>
+                </div>
+
+                <!-- Update 3 -->
+                <div class="update-card announcement">
+                    <div class="update-header">
+                        <span class="badge" style="background: var(--blue-50); color: var(--blue-600);">
+                            <i data-lucide="megaphone" width="12"></i> ANNOUNCEMENT
+                        </span>
+                    </div>
+                    <h3 class="update-title">Library Extended Hours During Exams</h3>
+                    <div class="update-body">
+                        The Central Library will remain open 24/7 starting from next week during the exam
+                        period.
+                        Additional study rooms have been made available on the 3rd floor.
+                    </div>
+                    <div class="update-time">
+                        <i data-lucide="clock" width="14"></i> 5 hours ago
+                    </div>
+                </div>
+
+                <!-- Update 4 -->
+                <div class="update-card news">
+                    <div class="update-header">
+                        <span class="badge badge-green">
+                            <i data-lucide="newspaper" width="12"></i> NEWS
+                        </span>
+                    </div>
+                    <h3 class="update-title">New Canteen Menu Items Added</h3>
+                    <div class="update-body">
+                        The main canteen has introduced 5 new healthy meal options based on student feedback.
+                        Check out
+                        the new menu board for details. Special student discount available!
+                    </div>
+                    <div class="update-time">
+                        <i data-lucide="clock" width="14"></i> 1 day ago
+                    </div>
+                </div>
+
+                <!-- Update 5 -->
+                <div class="update-card announcement">
+                    <div class="update-header">
+                        <span class="badge" style="background: var(--blue-50); color: var(--blue-600);">
+                            <i data-lucide="megaphone" width="12"></i> ANNOUNCEMENT
+                        </span>
+                    </div>
+                    <h3 class="update-title">WiFi Maintenance Scheduled</h3>
+                    <div class="update-body">
+                        Campus WiFi will undergo scheduled maintenance this Sunday from 2 AM to 6 AM. Internet
+                        services
+                        may be intermittent during this period.
+                    </div>
+                    <div class="update-time">
+                        <i data-lucide="clock" width="14"></i> 2 days ago
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="community.html" class="footer-link">Community</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Navbar -->
+    <nav class="mobile-bottom-nav">
+        <a href="index.html" class="mobile-nav-item">
+            <i data-lucide="home" width="24"></i>
+            <span>Home</span>
+        </a>
+        <a href="index.html#categories" class="mobile-nav-item">
+            <i data-lucide="grid" width="24"></i>
+            <span>Categories</span>
+        </a>
+        <a href="community.html" class="mobile-nav-item active">
+            <i data-lucide="users" width="24"></i>
+            <span>Community</span>
+        </a>
+        <a href="tracking.html" class="mobile-nav-item">
+            <i data-lucide="map-pin" width="24"></i>
+            <span>Track</span>
+        </a>
+        <a href="dasher.html" class="mobile-nav-item">
+            <i data-lucide="user" width="24"></i>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <!-- Floating Action Button -->
+    <button class="fab" id="fab-btn" title="Quick Actions">
+        <i data-lucide="plus" width="28" stroke-width="3"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="supabase-client.js"></script>
+    <script src="shared.js"></script>
+    <script src="community.js"></script>
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

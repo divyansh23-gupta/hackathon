@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DashDrop – Instant Delivery & Campus Micro-Commerce</title>
+    <meta name="description"
+        content="Order anything, anytime, delivered inside campus. From food to stationery, tech to errands - DashDrop has you covered.">
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Shared Styles -->
+    <link rel="stylesheet" href="shared.css">
+
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#FFD300">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="DashDrop">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192x192.png">
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Page Specific Styles -->
+    <style>
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
+            padding: var(--space-20) var(--space-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-grid {
+            max-width: 80rem;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--space-12);
+            align-items: center;
+        }
+
+        .hero-title {
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: var(--space-6);
+            color: var(--black);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1.125rem, 2vw, 1.375rem);
+            color: var(--gray-700);
+            margin-bottom: var(--space-8);
+            max-width: 600px;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: var(--space-4);
+            flex-wrap: wrap;
+        }
+
+        .floating-cards {
+            display: grid;
+            gap: var(--space-4);
+        }
+
+        .floating-card {
+            background: var(--white);
+            padding: var(--space-4);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            display: flex;
+            gap: var(--space-4);
+            align-items: center;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .floating-card:nth-child(2) {
+            animation-delay: 0.5s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Request Box */
+        .request-box {
+            max-width: 56rem;
+            margin: 0 auto;
+            background: var(--white);
+            padding: var(--space-8);
+            border-radius: var(--radius-2xl);
+            box-shadow: var(--shadow-2xl);
+            border: 3px solid var(--purple);
+        }
+
+        .request-box.urgent-mode {
+            border-color: var(--red-600);
+            background: linear-gradient(to bottom, #FEF2F2, var(--white));
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            margin-bottom: var(--space-6);
+        }
+
+        .search-input-large {
+            width: 100%;
+            padding: 1.25rem 3.5rem 1.25rem 1.5rem;
+            font-size: 1.25rem;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            outline: none;
+            transition: all var(--transition-base);
+        }
+
+        .search-input-large:focus {
+            border-color: var(--purple);
+            box-shadow: 0 0 0 4px rgba(126, 63, 242, 0.1);
+        }
+
+        .upload-icon-btn {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--yellow);
+            border: none;
+            padding: 0.75rem;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .upload-icon-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .chip-container {
+            display: flex;
+            gap: var(--space-3);
+            flex-wrap: wrap;
+            margin-bottom: var(--space-6);
+        }
+
+        .chip {
+            padding: 0.625rem 1.25rem;
+            background: var(--gray-100);
+            border: 2px solid transparent;
+            border-radius: var(--radius-full);
+            font-size: 0.875rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .chip:hover {
+            background: var(--yellow);
+            border-color: var(--black);
+            transform: translateY(-2px);
+        }
+
+        .mode-toggle-group {
+            display: inline-flex;
+            background: var(--gray-100);
+            padding: 0.25rem;
+            border-radius: var(--radius-full);
+            margin-bottom: var(--space-6);
+        }
+
+        .mode-toggle-btn {
+            padding: 0.625rem 1.5rem;
+            border: none;
+            background: transparent;
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            cursor: pointer;
+            transition: all var(--transition-base);
+            display: flex;
+            align-items: center;
+            gap: var(--space-2);
+        }
+
+        .mode-toggle-btn.active {
+            background: var(--white);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .mode-toggle-btn.urgent-active {
+            background: var(--red-600);
+            color: var(--white);
+        }
+
+        /* Categories */
+        .category-card {
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-base);
+        }
+
+        .category-icon-box {
+            aspect-ratio: 1;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-3);
+            font-size: 2rem;
+            transition: all var(--transition-base);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Add subtle pattern overlay to all category boxes */
+        .category-icon-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.15) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .category-icon-box i {
+            position: relative;
+            z-index: 1;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+        }
+
+        .category-card:hover .category-icon-box {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .category-card:hover .category-icon-box::before {
+            background-image:
+                radial-gradient(circle at 20% 50%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.25) 0%, transparent 50%);
+        }
+
+        .category-title {
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        /* Features */
+        .feature-icon-box {
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--space-4);
+        }
+
+        /* Live Request Feed */
+        .request-card {
+            background: var(--white);
+            border: 2px solid var(--gray-200);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+        }
+
+        .request-card:hover {
+            border-color: var(--purple);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .request-card.urgent {
+            border-color: var(--red-500);
+            background: linear-gradient(to bottom, #FEF2F2, var(--white));
+        }
+
+        /* Urgent Mode Section */
+        .urgent-section {
+            background: linear-gradient(135deg, var(--red-600) 0%, #DC2626 100%);
+            color: var(--white);
+            padding: var(--space-20) var(--space-4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .urgent-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 70%);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        /* Leaderboard */
+        .leaderboard-card {
+            background: var(--white);
+            border: 3px solid var(--black);
+            border-radius: var(--radius-2xl);
+            overflow: hidden;
+            box-shadow: 8px 8px 0 var(--black);
+        }
+
+        .leaderboard-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-6);
+            border-bottom: 2px solid var(--gray-100);
+            transition: background var(--transition-fast);
+        }
+
+        .leaderboard-row:hover {
+            background: #FEFCE8;
+        }
+
+        .leaderboard-row:last-child {
+            border-bottom: none;
+        }
+
+        .rank-badge {
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 1.125rem;
+        }
+
+        .rank-1 {
+            background: var(--yellow);
+            color: var(--black);
+        }
+
+        .rank-2 {
+            background: var(--gray-300);
+            color: var(--black);
+        }
+
+        .rank-3 {
+            background: #CD7F32;
+            color: var(--white);
+        }
+
+        /* Team */
+        .team-card {
+            text-align: center;
+        }
+
+        .team-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto var(--space-4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            border: 4px solid var(--purple);
+            background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
+        }
+
+        @media (min-width: 768px) {
+            .hero-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="#home" class="mobile-menu-link">Home</a>
+            <a href="#categories" class="mobile-menu-link">Categories</a>
+            <a href="#features" class="mobile-menu-link">Features</a>
+            <a href="community.html" class="mobile-menu-link" style="color: var(--purple);">Community</a>
+            <a href="#urgent" class="mobile-menu-link" style="color: var(--red-500);">Urgent</a>
+            <a href="login.html" class="btn btn-yellow btn-lg" style="text-decoration: none;">Login / Sign Up</a>
+        </nav>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#categories">Categories</a>
+                <a href="#features">Features</a>
+                <a href="community.html" style="color: var(--purple);">Community</a>
+                <a href="#urgent" style="color: var(--red-600);">
+                    <i data-lucide="alert-triangle" width="16"
+                        style="vertical-align: middle; margin-right: 4px;"></i>Urgent
+                </a>
+                <a href="#team">Team</a>
+                <a href="login.html"
+                    style="background: var(--black); color: var(--white); padding: 0.5rem 1.5rem; border-radius: var(--radius-lg); font-weight: 700; text-decoration: none;">Login</a>
+            </div>
+
+            <div class="nav-actions">
+                <button class="icon-btn">
+                    <i data-lucide="shopping-bag" width="24"></i>
+                    <span class="cart-badge">2</span>
+                </button>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+                <!-- Duplicate login button hidden - using nav-links version -->
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-grid">
+                <div data-animate>
+                    <div class="badge badge-green mb-6">
+                        <span style="width: 8px; height: 8px; background: var(--green-600); border-radius: 50%;"
+                            class="animate-pulse"></span>
+                        Campus-Only Delivery Service
+                    </div>
+
+                    <h1 class="hero-title">
+                        Anything, Anytime,<br>Inside Campus.
+                    </h1>
+
+                    <p class="hero-subtitle">
+                        Order from your room, lab, hostel, or cafeteria. Delivered within minutes.
+                    </p>
+
+                    <div class="hero-buttons">
+                        <a href="request.html" class="btn btn-primary btn-lg">
+                            Order Now <i data-lucide="arrow-right" width="20"></i>
+                        </a>
+                        <a href="dasher.html" class="btn btn-secondary btn-lg">
+                            Become a Dasher
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Floating Order Cards -->
+                <div class="floating-cards" data-animate>
+                    <div class="floating-card">
+                        <div
+                            style="background: #DCFCE7; color: var(--green-600); padding: 0.75rem; border-radius: 50%;">
+                            <i data-lucide="package" width="28"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Order #2938</h4>
+                            <p class="text-sm" style="color: var(--gray-600);">Arriving in 4 mins • Hostel Block B</p>
+                        </div>
+                    </div>
+                    <div class="floating-card">
+                        <div style="background: #FEE2E2; color: var(--red-600); padding: 0.75rem; border-radius: 50%;">
+                            <i data-lucide="coffee" width="28"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold">Cold Coffee & Samosa</h4>
+                            <p class="text-sm" style="color: var(--gray-600);">Canteen • Picking up now</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search & Custom Request Box -->
+        <section class="section">
+            <div class="request-box" id="request-box">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: var(--space-4); margin-bottom: var(--space-6);">
+                    <div>
+                        <h2 class="text-3xl font-black mb-2">What do you need today?</h2>
+                        <p style="color: var(--gray-600); font-weight: 500;">
+                            Request <span style="color: var(--purple); font-weight: 700;">custom errands</span> inside
+                            campus — not limited to products.
+                        </p>
+                    </div>
+
+                    <div class="mode-toggle-group">
+                        <button class="mode-toggle-btn active" id="normal-mode-btn">
+                            Normal
+                        </button>
+                        <button class="mode-toggle-btn" id="urgent-mode-btn">
+                            <i data-lucide="alert-triangle" width="16"></i> Urgent
+                        </button>
+                    </div>
+                </div>
+
+                <div class="search-input-wrapper">
+                    <input type="text" placeholder="e.g., Pick up my lab coat from the washroom..."
+                        class="search-input-large" id="main-search-input">
+                    <button class="upload-icon-btn">
+                        <i data-lucide="camera" width="24"></i>
+                    </button>
+                </div>
+
+                <div class="chip-container">
+                    <button class="chip"
+                        onclick="document.getElementById('main-search-input').value='Bring my charger from Room 302'">Bring
+                        my charger</button>
+                    <button class="chip"
+                        onclick="document.getElementById('main-search-input').value='Pick up notes from library'">Pick
+                        up notes</button>
+                    <button class="chip"
+                        onclick="document.getElementById('main-search-input').value='Return book to admin block'">Return
+                        book</button>
+                    <button class="chip"
+                        onclick="document.getElementById('main-search-input').value='Get printouts for CS101'">Get
+                        printouts</button>
+                </div>
+
+                <a href="request.html" class="btn btn-primary btn-lg btn-full">
+                    Find a Dasher Nearby <i data-lucide="search" width="20"></i>
+                </a>
+            </div>
+        </section>
+
+        <!-- Categories -->
+        <section id="categories" class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <div
+                    style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: var(--space-12);">
+                    <h2 class="text-4xl font-black">Explore Campus</h2>
+                    <a href="#"
+                        style="color: var(--purple); font-weight: bold; display: flex; align-items: center; text-decoration: none;">
+                        View all <i data-lucide="arrow-right" width="16" style="margin-left: 4px;"></i>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-6">
+                    <!-- Food & Snacks -->
+                    <a href="food.html" class="category-card" data-animate
+                        style="text-decoration: none; color: inherit;">
+                        <div class="category-icon-box"
+                            style="background: linear-gradient(135deg, rgba(255, 237, 213, 0.85) 0%, rgba(254, 215, 170, 0.85) 100%), url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=400&fit=crop') center/cover; color: var(--orange-600);">
+                            <i data-lucide="coffee" width="36"></i>
+                        </div>
+                        <h3 class="category-title">Food & Snacks</h3>
+                    </a>
+                    <!-- Stationery -->
+                    <a href="stationery.html" class="category-card" data-animate
+                        style="text-decoration: none; color: inherit;">
+                        <div class="category-icon-box"
+                            style="background: linear-gradient(135deg, rgba(219, 234, 254, 0.85) 0%, rgba(191, 219, 254, 0.85) 100%), url('https://images.unsplash.com/photo-1455390582262-044cdead277a?w=400&h=400&fit=crop') center/cover; color: var(--blue-600);">
+                            <i data-lucide="book-open" width="36"></i>
+                        </div>
+                        <h3 class="category-title">Stationery</h3>
+                    </a>
+                    <!-- Medicines -->
+                    <a href="medicines.html" class="category-card" data-animate
+                        style="text-decoration: none; color: inherit;">
+                        <div class="category-icon-box"
+                            style="background: linear-gradient(135deg, rgba(220, 252, 231, 0.85) 0%, rgba(187, 247, 208, 0.85) 100%), url('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=400&h=400&fit=crop') center/cover; color: var(--green-600);">
+                            <i data-lucide="pill" width="36"></i>
+                        </div>
+                        <h3 class="category-title">Medicines</h3>
+                    </a>
+                    <!-- Tech & Chargers -->
+                    <a href="tech.html" class="category-card" data-animate
+                        style="text-decoration: none; color: inherit;">
+                        <div class="category-icon-box"
+                            style="background: linear-gradient(135deg, rgba(243, 244, 246, 0.85) 0%, rgba(229, 231, 235, 0.85) 100%), url('https://images.unsplash.com/photo-1583863788434-e58a36330cf0?w=400&h=400&fit=crop') center/cover; color: var(--gray-700);">
+                            <i data-lucide="smartphone" width="36"></i>
+                        </div>
+                        <h3 class="category-title">Tech & Chargers</h3>
+                    </a>
+                    <!-- Custom Errands -->
+                    <a href="custom.html" class="category-card" data-animate
+                        style="text-decoration: none; color: inherit;">
+                        <div class="category-icon-box"
+                            style="background: linear-gradient(135deg, rgba(243, 232, 255, 0.85) 0%, rgba(233, 213, 255, 0.85) 100%), url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=400&h=400&fit=crop') center/cover; color: var(--purple);">
+                            <i data-lucide="users" width="36"></i>
+                        </div>
+                        <h3 class="category-title">Custom Errands</h3>
+                    </a>
+                    <!-- Hostel Needs -->
+                    <a href="hostel.html" class="category-card" data-animate
+                        style="text-decoration: none; color: inherit;">
+                        <div class="category-icon-box"
+                            style="background: linear-gradient(135deg, rgba(254, 249, 195, 0.85) 0%, rgba(254, 240, 138, 0.85) 100%), url('https://images.unsplash.com/photo-1555854877-bab0e564b8d5?w=400&h=400&fit=crop') center/cover; color: #CA8A04;">
+                            <i data-lucide="package" width="36"></i>
+                        </div>
+                        <h3 class="category-title">Hostel Needs</h3>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section id="features" class="section">
+            <div class="container">
+                <div class="text-center mb-16">
+                    <span
+                        style="color: var(--purple); font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.875rem;">Why
+                        DashDrop?</span>
+                    <h2 class="text-4xl font-black mt-2 mb-4">Built for Student Life</h2>
+                    <p style="color: var(--gray-600); max-width: 42rem; margin: 0 auto;">Innovative MVP features
+                        designed to solve actual campus logistics problems.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #FAF5FF;">
+                            <i data-lucide="sparkles" color="#7C3AED" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">Smart Tip Suggestions</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Automatically recommends
+                            tip amounts based on distance and urgency.</p>
+                    </div>
+
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #EFF6FF;">
+                            <i data-lucide="zap" color="#2563EB" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">Priority Matching</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Urgent and high-value tasks
+                            go first to top-rated dashers.</p>
+                    </div>
+
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #F0FDF4;">
+                            <i data-lucide="check-circle" color="#16A34A" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">One-Tap Updates</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Dasher flow: Picked Up → On
+                            The Way → Delivered.</p>
+                    </div>
+
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #FFF7ED;">
+                            <i data-lucide="search" color="#EA580C" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">Smart Availability</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Shows High / Medium / Low
+                            availability for campus store items.</p>
+                    </div>
+
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #FEF2F2;">
+                            <i data-lucide="clock" color="#DC2626" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">Queue-Time Indicator</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Shows approximate waiting
+                            time at canteen, library, or Xerox centers.</p>
+                    </div>
+
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #ECFDF5;">
+                            <i data-lucide="users" color="#059669" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">Order Clubbing 2.0</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Automatically groups
+                            multiple nearby customer orders to save time.</p>
+                    </div>
+
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #FEF9C3;">
+                            <i data-lucide="star" color="#CA8A04" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">Quick Preset Errands</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Popular one-click requests
+                            like chargers, notes, printouts, books.</p>
+                    </div>
+
+                    <div class="card" data-animate>
+                        <div class="feature-icon-box" style="background: #E0E7FF;">
+                            <i data-lucide="calendar" color="#4F46E5" width="28"></i>
+                        </div>
+                        <h3 class="text-xl font-black mb-3">Scheduled Requests</h3>
+                        <p class="text-sm" style="color: var(--gray-600); line-height: 1.6;">Let users pick a specific
+                            time to get tasks done.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Request Feed -->
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-black mb-4">Live Requests Near You</h2>
+                    <p style="color: var(--gray-600);">Accept requests and start earning. Updated in real-time.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Request 1 -->
+                    <div class="request-card urgent" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-red">
+                                <i data-lucide="alert-triangle" width="12"></i> URGENT
+                            </div>
+                            <div class="badge badge-yellow">+ ₹30</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Notebooks & Stationery</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Girls Hostel Block A • Room 405
+                        </p>
+                        <a href="dasher.html" class="btn btn-red btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 2 -->
+                    <div class="request-card" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-gray">Normal</div>
+                            <div class="badge badge-yellow">+ ₹15</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Pick up notes from library</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Central Library → Hostel Block C
+                        </p>
+                        <a href="dasher.html" class="btn btn-primary btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 3 -->
+                    <div class="request-card" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-gray">Normal</div>
+                            <div class="badge badge-yellow">+ ₹20</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Cold Coffee & Samosa</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Main Canteen → Lab Block 2
+                        </p>
+                        <a href="dasher.html" class="btn btn-primary btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 4 -->
+                    <div class="request-card" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-gray">Normal</div>
+                            <div class="badge badge-yellow">+ ₹12</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Return book to admin block</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Hostel B → Admin Block
+                        </p>
+                        <a href="dasher.html" class="btn btn-primary btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 5 -->
+                    <div class="request-card urgent" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-red">
+                                <i data-lucide="alert-triangle" width="12"></i> URGENT
+                            </div>
+                            <div class="badge badge-yellow">+ ₹25</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Hall Ticket from Room</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Hostel A Room 302 → Exam Hall
+                        </p>
+                        <a href="dasher.html" class="btn btn-red btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 6 -->
+                    <div class="request-card" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-gray">Normal</div>
+                            <div class="badge badge-yellow">+ ₹18</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Get printouts for CS101</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Xerox Shop → Lecture Hall 5
+                        </p>
+                        <a href="dasher.html" class="btn btn-primary btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 7 -->
+                    <div class="request-card" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-gray">Normal</div>
+                            <div class="badge badge-yellow">+ ₹22</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Phone Charger (Type-C)</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Campus Store → Library Study Room
+                        </p>
+                        <a href="dasher.html" class="btn btn-primary btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 8 -->
+                    <div class="request-card" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-gray">Normal</div>
+                            <div class="badge badge-yellow">+ ₹16</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Notebook & Pen</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Stationery Shop → Hostel Block D
+                        </p>
+                        <a href="dasher.html" class="btn btn-primary btn-full btn-sm">Accept Request</a>
+                    </div>
+
+                    <!-- Request 9 -->
+                    <div class="request-card urgent" data-animate>
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: start; margin-bottom: var(--space-4);">
+                            <div class="badge badge-red">
+                                <i data-lucide="alert-triangle" width="12"></i> URGENT
+                            </div>
+                            <div class="badge badge-yellow">+ ₹35</div>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Fever Medicine (Paracetamol)</h3>
+                        <p class="text-sm mb-4" style="color: var(--gray-600);">
+                            <i data-lucide="map-pin" width="14" style="display: inline; margin-right: 4px;"></i>
+                            Medical Store → Hostel Block B
+                        </p>
+                        <a href="dasher.html" class="btn btn-red btn-full btn-sm">Accept Request</a>
+                    </div>
+                </div>
+
+                <div class="text-center mt-12">
+                    <button class="btn btn-outline btn-lg">
+                        Load More Requests <i data-lucide="refresh-cw" width="20"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Urgent Mode Highlight -->
+        <section id="urgent" class="urgent-section">
+            <div class="urgent-glow"></div>
+            <div class="container" style="position: relative; z-index: 10;">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12 align-items-center">
+                    <div>
+                        <div class="badge mb-6" style="background: #991B1B; color: #FECACA;">
+                            <span style="width: 8px; height: 8px; background: #F87171; border-radius: 50%;"
+                                class="animate-ping"></span>
+                            Urgent Mode
+                        </div>
+                        <h2 class="text-4xl font-black mb-6">
+                            Need it Fast?<br>Activate Urgent Mode.
+                        </h2>
+                        <p class="text-xl mb-8" style="color: #FEE2E2;">
+                            Urgent requests get priority visibility and extra dasher rewards. Perfect for forgotten hall
+                            tickets, urgent medicines, or time-sensitive errands.
+                        </p>
+                        <div
+                            style="display: flex; gap: var(--space-4); margin-bottom: var(--space-8); flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                <i data-lucide="zap" width="24"></i>
+                                <span class="font-bold">Priority Matching</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                <i data-lucide="coins" width="24"></i>
+                                <span class="font-bold">Extra ₹10-₹35</span>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                <i data-lucide="clock" width="24"></i>
+                                <span class="font-bold">Faster Delivery</span>
+                            </div>
+                        </div>
+                        <a href="request.html" class="btn btn-lg"
+                            style="background: var(--white); color: var(--red-600);">
+                            Activate Urgent Mode <i data-lucide="arrow-right" width="20"></i>
+                        </a>
+                    </div>
+
+                    <div style="display: flex; justify-content: center;">
+                        <div
+                            style="background: white; padding: var(--space-8); border-radius: var(--radius-2xl); color: black; max-width: 24rem; transform: rotate(3deg); box-shadow: var(--shadow-2xl);">
+                            <div
+                                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-4); padding-bottom: var(--space-4); border-bottom: 2px solid var(--gray-200);">
+                                <span class="badge badge-red">
+                                    <i data-lucide="alert-triangle" width="14"></i> URGENT
+                                </span>
+                                <span class="badge badge-yellow">+ ₹30 Bounty</span>
+                            </div>
+                            <div style="margin-bottom: var(--space-6);">
+                                <h4 class="font-black text-xl mb-2">Notebooks & Stationery</h4>
+                                <p class="text-sm" style="color: var(--gray-600);">Girls Hostel Block A • Room 405</p>
+                                <p class="text-sm mt-2" style="color: var(--red-600); font-weight: 700;">Needed ASAP •
+                                    Exam in 30 mins</p>
+                            </div>
+                            <button class="btn btn-red btn-full">
+                                Accept Now <i data-lucide="check" width="18"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Leaderboard & Rewards -->
+        <section class="section">
+            <div class="container" style="max-width: 56rem;">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-black mb-4">Campus Heroes</h2>
+                    <p style="color: var(--gray-600);">Earn XP, coins, and badges. Redeem for canteen discounts and
+                        perks.</p>
+                </div>
+
+                <div class="leaderboard-card">
+                    <!-- Rank 1 -->
+                    <div class="leaderboard-row">
+                        <div style="display: flex; align-items: center; gap: var(--space-4);">
+                            <div class="rank-badge rank-1">#1</div>
+                            <div>
+                                <h4 class="font-black text-xl">Rahul Kumar</h4>
+                                <div style="display: flex; gap: var(--space-3); margin-top: var(--space-1);">
+                                    <span class="badge badge-purple">Speedster</span>
+                                    <span class="text-sm" style="color: var(--gray-600);">127 deliveries</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-black text-2xl">2,450 XP</p>
+                            <p class="text-sm" style="color: var(--gray-600);">1,850 🪙</p>
+                        </div>
+                    </div>
+
+                    <!-- Rank 2 -->
+                    <div class="leaderboard-row">
+                        <div style="display: flex; align-items: center; gap: var(--space-4);">
+                            <div class="rank-badge rank-2">#2</div>
+                            <div>
+                                <h4 class="font-black text-xl">Priya Patel</h4>
+                                <div style="display: flex; gap: var(--space-3); margin-top: var(--space-1);">
+                                    <span class="badge badge-purple">Elite</span>
+                                    <span class="text-sm" style="color: var(--gray-600);">98 deliveries</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-black text-2xl">2,100 XP</p>
+                            <p class="text-sm" style="color: var(--gray-600);">1,620 🪙</p>
+                        </div>
+                    </div>
+
+                    <!-- Rank 3 -->
+                    <div class="leaderboard-row">
+                        <div style="display: flex; align-items: center; gap: var(--space-4);">
+                            <div class="rank-badge rank-3">#3</div>
+                            <div>
+                                <h4 class="font-black text-xl">Sneha Mehta</h4>
+                                <div style="display: flex; gap: var(--space-3); margin-top: var(--space-1);">
+                                    <span class="badge badge-purple">Helper</span>
+                                    <span class="text-sm" style="color: var(--gray-600);">85 deliveries</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="font-black text-2xl">1,890 XP</p>
+                            <p class="text-sm" style="color: var(--gray-600);">1,450 🪙</p>
+                        </div>
+                    </div>
+
+                    <div style="padding: var(--space-6); background: var(--gray-50); text-align: center;">
+                        <button class="btn btn-outline">View Full Leaderboard</button>
+                    </div>
+                </div>
+
+                <!-- Badges -->
+                <div class="mt-12">
+                    <h3 class="text-2xl font-black text-center mb-8">Earn Badges</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="card text-center">
+                            <div style="font-size: 3rem; margin-bottom: var(--space-2);">⚡</div>
+                            <p class="font-bold">Speedster</p>
+                            <p class="text-sm" style="color: var(--gray-600);">50 deliveries</p>
+                        </div>
+                        <div class="card text-center">
+                            <div style="font-size: 3rem; margin-bottom: var(--space-2);">💙</div>
+                            <p class="font-bold">Helper</p>
+                            <p class="text-sm" style="color: var(--gray-600);">100 deliveries</p>
+                        </div>
+                        <div class="card text-center">
+                            <div style="font-size: 3rem; margin-bottom: var(--space-2);">🏆</div>
+                            <p class="font-bold">Pro Dasher</p>
+                            <p class="text-sm" style="color: var(--gray-600);">200 deliveries</p>
+                        </div>
+                        <div class="card text-center">
+                            <div style="font-size: 3rem; margin-bottom: var(--space-2);">🌟</div>
+                            <p class="font-bold">Campus Hero</p>
+                            <p class="text-sm" style="color: var(--gray-600);">500 deliveries</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Team Section -->
+        <section id="team" class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <div class="text-center mb-12">
+                    <h2 class="text-4xl font-black mb-4">Meet the Team</h2>
+                    <p style="color: var(--gray-600);">Built by students, for students.</p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8">
+                    <div class="team-card card" data-animate>
+                        <div class="team-photo">AG</div>
+                        <h3 class="font-black text-xl mb-1">Awaneesh Gupta</h3>
+                        <p style="color: var(--gray-600);">Full Stack Developer</p>
+                    </div>
+                    <div class="team-card card" data-animate>
+                        <div class="team-photo">DG</div>
+                        <h3 class="font-black text-xl mb-1">Divyansh Gupta</h3>
+                        <p style="color: var(--gray-600);">Frontend Developer</p>
+                    </div>
+                    <div class="team-card card" data-animate>
+                        <div class="team-photo">AK</div>
+                        <h3 class="font-black text-xl mb-1">Aditi Kulkarni</h3>
+                        <p style="color: var(--gray-600);">UI/UX Designer</p>
+                    </div>
+                    <div class="team-card card" data-animate>
+                        <div class="team-photo">SY</div>
+                        <h3 class="font-black text-xl mb-1">Sharav Yadav</h3>
+                        <p style="color: var(--gray-600);">Backend Developer</p>
+                    </div>
+                    <div class="team-card card" data-animate>
+                        <div class="team-photo">RH</div>
+                        <h3 class="font-black text-xl mb-1">Revansh Heda</h3>
+                        <p style="color: var(--gray-600);">Product Manager</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="community.html" class="footer-link">Community</a>
+                <a href="#urgent" class="footer-link">Urgent Mode</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Bottom Navbar -->
+    <nav class="mobile-bottom-nav">
+        <a href="/index.html" class="mobile-nav-item active">
+            <i data-lucide="home" width="24"></i>
+            <span>Home</span>
+        </a>
+        <a href="/index.html#categories" class="mobile-nav-item">
+            <i data-lucide="grid" width="24"></i>
+            <span>Categories</span>
+        </a>
+        <a href="/community.html" class="mobile-nav-item">
+            <i data-lucide="users" width="24"></i>
+            <span>Community</span>
+        </a>
+        <a href="/tracking.html" class="mobile-nav-item">
+            <i data-lucide="map-pin" width="24"></i>
+            <span>Track</span>
+        </a>
+        <a href="/dasher.html" class="mobile-nav-item">
+            <i data-lucide="user" width="24"></i>
+            <span>Account</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="supabase-client.js"></script>
+    <script src="chatbot.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        // Urgent Mode Toggle
+        const normalBtn = document.getElementById('normal-mode-btn');
+        const urgentBtn = document.getElementById('urgent-mode-btn');
+        const requestBox = document.getElementById('request-box');
+        const searchInput = document.getElementById('main-search-input');
+
+        urgentBtn.addEventListener('click', () => {
+            normalBtn.classList.remove('active');
+            urgentBtn.classList.add('urgent-active');
+            requestBox.classList.add('urgent-mode');
+            searchInput.placeholder = 'URGENT REQUEST! Describe your need...';
+        });
+
+        normalBtn.addEventListener('click', () => {
+            urgentBtn.classList.remove('urgent-active');
+            normalBtn.classList.add('active');
+            requestBox.classList.remove('urgent-mode');
+            searchInput.placeholder = 'e.g., Pick up my lab coat from the washroom...';
+        });
+    </script>
+
+    <!-- PWA Service Worker Registration -->
+    <script>
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                    .then(reg => console.log('✅ Service Worker registered'))
+                    .catch(err => console.log('❌ SW registration failed:', err));
+            });
+        }
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            setTimeout(() => {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        console.log('✅ Notifications enabled');
+                    }
+                });
+            }, 3000); // Ask after 3 seconds
+        }
+    </script>
+</body>
+
+</html>

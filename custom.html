@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom Errands – DashDrop</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="shared.css">
+    <style>
+        .category-header {
+            background: linear-gradient(135deg, #F3E8FF 0%, #FAF5FF 100%);
+            padding: var(--space-16) var(--space-4);
+            text-align: center;
+        }
+
+        .category-icon-large {
+            width: 80px;
+            height: 80px;
+            background: var(--purple);
+            color: var(--white);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-4);
+            font-size: 2.5rem;
+        }
+
+        .template-card {
+            background: var(--white);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+            cursor: pointer;
+            border: 2px solid var(--gray-200);
+        }
+
+        .template-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--purple);
+        }
+
+        .availability-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-4);
+            background: var(--green-50);
+            color: var(--green-600);
+            border-radius: var(--radius-full);
+            font-weight: 700;
+            font-size: 0.875rem;
+            margin-bottom: var(--space-6);
+        }
+
+        .live-feed {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .live-item {
+            padding: var(--space-4);
+            background: var(--gray-50);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-3);
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            animation: slideInRight 0.5s ease;
+        }
+
+        .custom-form-large {
+            background: linear-gradient(135deg, var(--purple) 0%, #A78BFA 100%);
+            color: var(--white);
+            padding: var(--space-10);
+            border-radius: var(--radius-2xl);
+            margin-bottom: var(--space-8);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mobile-menu" class="mobile-menu-overlay hidden">
+        <button id="close-menu-btn" class="mobile-menu-close">
+            <i data-lucide="x" width="32"></i>
+        </button>
+        <nav class="mobile-menu-nav">
+            <a href="index.html" class="mobile-menu-link">Home</a>
+            <a href="request.html" class="mobile-menu-link">Create Request</a>
+            <a href="index.html#categories" class="mobile-menu-link">All Categories</a>
+            <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
+        </nav>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                </div>
+                <span>DashDrop</span>
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="index.html#categories">Categories</a>
+                <a href="request.html">Create Request</a>
+            </div>
+            <div class="nav-actions">
+                <button class="icon-btn">
+                    <i data-lucide="shopping-bag" width="24"></i>
+                    <span class="cart-badge">2</span>
+                </button>
+                <button id="open-menu-btn" class="icon-btn mobile-menu-btn">
+                    <i data-lucide="menu" width="24"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="category-header">
+            <div class="container">
+                <div class="category-icon-large">
+                    <i data-lucide="users" width="48"></i>
+                </div>
+                <h1 class="text-4xl font-black mb-4">Custom Errands</h1>
+                <p class="text-lg" style="color: var(--gray-700); max-width: 42rem; margin: 0 auto;">
+                    Request anything inside campus — not limited to products. Submit documents, return books, pick up
+                    parcels, and more.
+                </p>
+            </div>
+        </section>
+
+        <section class="section-sm">
+            <div class="container" style="max-width: 56rem;">
+                <div style="position: relative;">
+                    <input type="text" placeholder="Search custom errands..." class="form-input form-input-lg"
+                        style="padding-left: 3.5rem;">
+                    <i data-lucide="search" width="24"
+                        style="position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400);"></i>
+                </div>
+            </div>
+        </section>
+
+        <section class="section-sm" style="padding-top: 0;">
+            <div class="container text-center">
+                <div class="availability-badge" style="margin: 0 auto;">
+                    <span style="width: 8px; height: 8px; background: var(--green-600); border-radius: 50%;"
+                        class="animate-pulse"></span>
+                    7 Dashers Nearby • Ready for Any Task
+                </div>
+            </div>
+        </section>
+
+        <!-- Large Custom Form -->
+        <section class="section">
+            <div class="container" style="max-width: 56rem;">
+                <div class="custom-form-large">
+                    <h2 class="text-3xl font-black mb-4">Describe Your Custom Task</h2>
+                    <p class="mb-6" style="opacity: 0.9;">
+                        Tell us exactly what you need done. Be as specific as possible about the task, location, and
+                        timing.
+                    </p>
+                    <div class="form-group">
+                        <textarea class="form-textarea"
+                            placeholder="e.g., Need ID card delivered before class, Submit assignment to professor's office, Pick up parcel from gate..."
+                            rows="4" style="background: var(--white); color: var(--black);"></textarea>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <select class="form-select" style="background: var(--white); color: var(--black);">
+                            <option>Select pick-up location...</option>
+                            <option>Hostel Block A</option>
+                            <option>Hostel Block B</option>
+                            <option>Library</option>
+                            <option>Admin Block</option>
+                            <option>Main Gate</option>
+                            <option>Professor's Office</option>
+                        </select>
+                        <select class="form-select" style="background: var(--white); color: var(--black);">
+                            <option>Select delivery location...</option>
+                            <option>Hostel Block A</option>
+                            <option>Lecture Hall</option>
+                            <option>Lab Block 1</option>
+                            <option>Admin Block</option>
+                            <option>Exam Hall</option>
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                        <input type="number" class="form-input" placeholder="Tip amount (₹)"
+                            style="background: var(--white); color: var(--black);">
+                        <div class="mode-toggle-group" style="background: rgba(255, 255, 255, 0.2);">
+                            <button type="button" class="mode-toggle-btn active"
+                                style="color: var(--white);">Normal</button>
+                            <button type="button" class="mode-toggle-btn" style="color: var(--white);">
+                                <i data-lucide="alert-triangle" width="14"></i> Urgent (+₹20)
+                            </button>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--space-4);">
+                        <button class="btn btn-lg"
+                            style="background: rgba(255, 255, 255, 0.2); color: var(--white); border: 2px solid rgba(255, 255, 255, 0.3);">
+                            <i data-lucide="camera" width="20"></i> Add Photo
+                        </button>
+                        <button class="btn btn-yellow btn-lg btn-full">
+                            Post Custom Request <i data-lucide="send" width="20"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Popular Templates -->
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-8">Popular Custom Errands</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="template-card">
+                        <div
+                            style="background: #F3E8FF; color: var(--purple); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                            <i data-lucide="file-text" width="24"></i>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Submit Documents</h3>
+                        <p class="text-sm mb-3" style="color: var(--gray-600);">Submit assignments, forms, or documents
+                            to offices</p>
+                        <button class="btn btn-outline btn-sm">Use Template</button>
+                    </div>
+
+                    <div class="template-card">
+                        <div
+                            style="background: #DBEAFE; color: var(--blue-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                            <i data-lucide="book" width="24"></i>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Return Library Book</h3>
+                        <p class="text-sm mb-3" style="color: var(--gray-600);">Return books to library or admin block
+                        </p>
+                        <button class="btn btn-outline btn-sm">Use Template</button>
+                    </div>
+
+                    <div class="template-card">
+                        <div
+                            style="background: #FFEDD5; color: var(--orange-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                            <i data-lucide="package" width="24"></i>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Pick Up Parcel</h3>
+                        <p class="text-sm mb-3" style="color: var(--gray-600);">Collect parcels from main gate or
+                            reception</p>
+                        <button class="btn btn-outline btn-sm">Use Template</button>
+                    </div>
+
+                    <div class="template-card">
+                        <div
+                            style="background: #FEF9C3; color: #CA8A04; padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                            <i data-lucide="credit-card" width="24"></i>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Deliver ID Card</h3>
+                        <p class="text-sm mb-3" style="color: var(--gray-600);">Deliver ID card or documents to
+                            class/exam hall</p>
+                        <button class="btn btn-outline btn-sm">Use Template</button>
+                    </div>
+
+                    <div class="template-card">
+                        <div
+                            style="background: #DCFCE7; color: var(--green-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                            <i data-lucide="clipboard" width="24"></i>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Collect Attendance Slip</h3>
+                        <p class="text-sm mb-3" style="color: var(--gray-600);">Pick up attendance slips or certificates
+                        </p>
+                        <button class="btn btn-outline btn-sm">Use Template</button>
+                    </div>
+
+                    <div class="template-card">
+                        <div
+                            style="background: #FEE2E2; color: var(--red-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
+                            <i data-lucide="star" width="24"></i>
+                        </div>
+                        <h3 class="font-black text-lg mb-2">Custom Task</h3>
+                        <p class="text-sm mb-3" style="color: var(--gray-600);">Anything else you need done on campus
+                        </p>
+                        <button class="btn btn-outline btn-sm">Use Template</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Chips -->
+        <section class="section">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-6">Quick Request Templates</h2>
+                <div class="chip-container">
+                    <button class="chip">Submit documents</button>
+                    <button class="chip">Return library book</button>
+                    <button class="chip">Pick up parcel</button>
+                    <button class="chip">Deliver ID card to class</button>
+                    <button class="chip">Collect attendance slip</button>
+                    <button class="chip">Return equipment to lab</button>
+                    <button class="chip">Submit assignment</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Live Recent Requests -->
+        <section class="section" style="background: var(--gray-50);">
+            <div class="container">
+                <h2 class="text-3xl font-black mb-6">Live Recent Requests</h2>
+                <div class="live-feed">
+                    <div class="live-item">
+                        <i data-lucide="zap" width="20" style="color: var(--red-600);"></i>
+                        <p class="text-sm"><strong>Urgent: ID card delivered</strong> before class</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">1 min ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <p class="text-sm"><strong>Library book</strong> returned to admin block</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">4 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="package" width="20" style="color: var(--purple);"></i>
+                        <p class="text-sm"><strong>Parcel</strong> picked from main gate</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">8 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <p class="text-sm"><strong>Assignment</strong> submitted to professor</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">12 mins ago</span>
+                    </div>
+                    <div class="live-item">
+                        <i data-lucide="check-circle" width="20" style="color: var(--green-600);"></i>
+                        <p class="text-sm"><strong>Attendance slip</strong> collected from office</p>
+                        <span class="text-sm" style="color: var(--gray-500); margin-left: auto;">17 mins ago</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Bottom CTAs -->
+        <section class="section">
+            <div class="container text-center">
+                <h2 class="text-3xl font-black mb-6">Ready to Post Your Task?</h2>
+                <div style="display: flex; gap: var(--space-4); justify-content: center; flex-wrap: wrap;">
+                    <a href="request.html" class="btn btn-primary btn-lg">
+                        Post a Custom Errand
+                    </a>
+                    <a href="dasher.html" class="btn btn-secondary btn-lg">
+                        Become a Dasher
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <i data-lucide="zap" width="24" stroke-width="3"></i>
+                    <span class="text-2xl font-black">DashDrop</span>
+                </div>
+                <p style="color: var(--gray-400); line-height: 1.6; max-width: 20rem;">
+                    The ultimate micro-commerce platform built for students, by students.
+                </p>
+            </div>
+            <div>
+                <h4 class="footer-title">Platform</h4>
+                <a href="request.html" class="footer-link">Order Now</a>
+                <a href="dasher.html" class="footer-link">Become a Dasher</a>
+                <a href="tracking.html" class="footer-link">Track Order</a>
+            </div>
+            <div>
+                <h4 class="footer-title">Connect</h4>
+                <a href="index.html#team" class="footer-link">About Team</a>
+                <a href="#" class="footer-link">GitHub Repo</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
+            <div style="display: flex; gap: var(--space-4);">
+                <a href="#" class="footer-link">Privacy</a>
+                <a href="#" class="footer-link">Terms</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="shared.js"></script>
+</body>
+
+</html>
