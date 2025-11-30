@@ -261,6 +261,10 @@ CREATE POLICY "Users can update their own profile"
     ON users FOR UPDATE
     USING (auth.uid() = id);
 
+CREATE POLICY "Users can create their own profile"
+    ON users FOR INSERT
+    WITH CHECK (auth.uid() = id);
+
 -- Requests Policies
 CREATE POLICY "Anyone can view pending requests"
     ON requests FOR SELECT
@@ -305,6 +309,11 @@ CREATE POLICY "Anyone can view dasher stats"
 CREATE POLICY "Dashers can update their own stats"
     ON dasher_stats FOR UPDATE
     USING (dasher_id = auth.uid());
+
+CREATE POLICY "Dashers can create their own stats"
+    ON dasher_stats FOR INSERT
+    WITH CHECK (dasher_id = auth.uid());
+
 
 -- Chat Messages Policies
 CREATE POLICY "Users can view messages for their requests"
