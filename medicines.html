@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
             padding: var(--space-16) var(--space-4);
             text-align: center;
         }
-
         .category-icon-large {
             width: 80px;
             height: 80px;
@@ -26,7 +24,6 @@
             margin: 0 auto var(--space-4);
             font-size: 2.5rem;
         }
-
         .item-card {
             background: var(--white);
             border-radius: var(--radius-xl);
@@ -35,12 +32,10 @@
             transition: all var(--transition-base);
             cursor: pointer;
         }
-
         .item-card:hover {
             transform: translateY(-8px);
             box-shadow: var(--shadow-xl);
         }
-
         .item-image {
             width: 100%;
             height: 180px;
@@ -50,11 +45,9 @@
             justify-content: center;
             font-size: 4rem;
         }
-
         .item-info {
             padding: var(--space-4);
         }
-
         .availability-badge {
             display: inline-flex;
             align-items: center;
@@ -67,12 +60,10 @@
             font-size: 0.875rem;
             margin-bottom: var(--space-6);
         }
-
         .live-feed {
             max-height: 400px;
             overflow-y: auto;
         }
-
         .live-item {
             padding: var(--space-4);
             background: var(--gray-50);
@@ -85,7 +76,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="mobile-menu" class="mobile-menu-overlay hidden">
         <button id="close-menu-btn" class="mobile-menu-close">
@@ -98,14 +88,10 @@
             <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
         </nav>
     </div>
-
     <nav class="navbar">
         <div class="nav-wrapper">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="zap" width="24" stroke-width="3"></i>
-                </div>
-                <span>DashDrop</span>
+                <img src="dashdrop-logo-header.png" alt="DashDrop" style="height: 40px; width: auto;">
             </a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
@@ -123,7 +109,6 @@
             </div>
         </div>
     </nav>
-
     <main>
         <section class="category-header">
             <div class="container">
@@ -136,7 +121,6 @@
                 </p>
             </div>
         </section>
-
         <section class="section-sm">
             <div class="container" style="max-width: 56rem;">
                 <div style="position: relative;">
@@ -147,7 +131,6 @@
                 </div>
             </div>
         </section>
-
         <section class="section-sm" style="padding-top: 0;">
             <div class="container text-center">
                 <div class="availability-badge" style="margin: 0 auto;">
@@ -157,7 +140,6 @@
                 </div>
             </div>
         </section>
-
         <section class="section">
             <div class="container">
                 <h2 class="text-3xl font-black mb-8">Popular Items</h2>
@@ -170,7 +152,6 @@
                             <button class="btn btn-primary btn-sm btn-full">Request This</button>
                         </div>
                     </div>
-
                     <div class="item-card">
                         <div class="item-image">💊</div>
                         <div class="item-info">
@@ -179,7 +160,6 @@
                             <button class="btn btn-primary btn-sm btn-full">Request This</button>
                         </div>
                     </div>
-
                     <div class="item-card">
                         <div class="item-image">🧴</div>
                         <div class="item-info">
@@ -188,7 +168,6 @@
                             <button class="btn btn-primary btn-sm btn-full">Request This</button>
                         </div>
                     </div>
-
                     <div class="item-card">
                         <div class="item-image">🩹</div>
                         <div class="item-info">
@@ -197,7 +176,6 @@
                             <button class="btn btn-primary btn-sm btn-full">Request This</button>
                         </div>
                     </div>
-
                     <div class="item-card">
                         <div class="item-image">🧴</div>
                         <div class="item-info">
@@ -206,7 +184,6 @@
                             <button class="btn btn-primary btn-sm btn-full">Request This</button>
                         </div>
                     </div>
-
                     <div class="item-card">
                         <div class="item-image">💊</div>
                         <div class="item-info">
@@ -215,7 +192,6 @@
                             <button class="btn btn-primary btn-sm btn-full">Request This</button>
                         </div>
                     </div>
-
                     <div class="item-card">
                         <div class="item-image">🧴</div>
                         <div class="item-info">
@@ -224,7 +200,6 @@
                             <button class="btn btn-primary btn-sm btn-full">Request This</button>
                         </div>
                     </div>
-
                     <div class="item-card">
                         <div class="item-image">🍯</div>
                         <div class="item-info">
@@ -236,7 +211,6 @@
                 </div>
             </div>
         </section>
-
         <section class="section" style="background: var(--gray-50);">
             <div class="container">
                 <h2 class="text-3xl font-black mb-6">Quick Request Templates</h2>
@@ -249,7 +223,6 @@
                 </div>
             </div>
         </section>
-
         <section class="section">
             <div class="container" style="max-width: 56rem;">
                 <div class="card">
@@ -286,7 +259,6 @@
                 </div>
             </div>
         </section>
-
         <section class="section" style="background: var(--gray-50);">
             <div class="container">
                 <h2 class="text-3xl font-black mb-6">Live Recent Requests</h2>
@@ -319,7 +291,6 @@
                 </div>
             </div>
         </section>
-
         <section class="section">
             <div class="container text-center">
                 <h2 class="text-3xl font-black mb-6">Ready to Order?</h2>
@@ -334,7 +305,6 @@
             </div>
         </section>
     </main>
-
     <footer class="footer">
         <div class="footer-grid">
             <div>
@@ -367,7 +337,6 @@
             </div>
         </div>
     </footer>
-
     <script src="shared.js"></script>
     <script>
         // Make all "Request This" buttons interactive
@@ -381,7 +350,6 @@
                 }, 800);
             });
         });
-
         // Make template chips interactive
         document.querySelectorAll('.chip').forEach(chip => {
             chip.addEventListener('click', function () {
@@ -392,7 +360,6 @@
                 }, 800);
             });
         });
-
         // Make "Post Request" button interactive
         const postRequestBtn = document.querySelector('.btn-primary.btn-full');
         if (postRequestBtn && postRequestBtn.textContent.includes('Post Request')) {
@@ -415,5 +382,4 @@
         }
     </script>
 </body>
-
 </html>

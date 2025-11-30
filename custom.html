@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
             padding: var(--space-16) var(--space-4);
             text-align: center;
         }
-
         .category-icon-large {
             width: 80px;
             height: 80px;
@@ -26,7 +24,6 @@
             margin: 0 auto var(--space-4);
             font-size: 2.5rem;
         }
-
         .template-card {
             background: var(--white);
             border-radius: var(--radius-xl);
@@ -36,13 +33,11 @@
             cursor: pointer;
             border: 2px solid var(--gray-200);
         }
-
         .template-card:hover {
             transform: translateY(-4px);
             box-shadow: var(--shadow-lg);
             border-color: var(--purple);
         }
-
         .availability-badge {
             display: inline-flex;
             align-items: center;
@@ -55,12 +50,10 @@
             font-size: 0.875rem;
             margin-bottom: var(--space-6);
         }
-
         .live-feed {
             max-height: 400px;
             overflow-y: auto;
         }
-
         .live-item {
             padding: var(--space-4);
             background: var(--gray-50);
@@ -71,7 +64,6 @@
             gap: var(--space-3);
             animation: slideInRight 0.5s ease;
         }
-
         .custom-form-large {
             background: linear-gradient(135deg, var(--purple) 0%, #A78BFA 100%);
             color: var(--white);
@@ -81,7 +73,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="mobile-menu" class="mobile-menu-overlay hidden">
         <button id="close-menu-btn" class="mobile-menu-close">
@@ -94,14 +85,10 @@
             <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
         </nav>
     </div>
-
     <nav class="navbar">
         <div class="nav-wrapper">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="zap" width="24" stroke-width="3"></i>
-                </div>
-                <span>DashDrop</span>
+                <img src="dashdrop-logo-header.png" alt="DashDrop" style="height: 40px; width: auto;">
             </a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
@@ -119,7 +106,6 @@
             </div>
         </div>
     </nav>
-
     <main>
         <section class="category-header">
             <div class="container">
@@ -133,7 +119,6 @@
                 </p>
             </div>
         </section>
-
         <section class="section-sm">
             <div class="container" style="max-width: 56rem;">
                 <div style="position: relative;">
@@ -144,7 +129,6 @@
                 </div>
             </div>
         </section>
-
         <section class="section-sm" style="padding-top: 0;">
             <div class="container text-center">
                 <div class="availability-badge" style="margin: 0 auto;">
@@ -154,7 +138,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Large Custom Form -->
         <section class="section">
             <div class="container" style="max-width: 56rem;">
@@ -211,7 +194,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Popular Templates -->
         <section class="section" style="background: var(--gray-50);">
             <div class="container">
@@ -227,7 +209,6 @@
                             to offices</p>
                         <button class="btn btn-outline btn-sm">Use Template</button>
                     </div>
-
                     <div class="template-card">
                         <div
                             style="background: #DBEAFE; color: var(--blue-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
@@ -238,7 +219,6 @@
                         </p>
                         <button class="btn btn-outline btn-sm">Use Template</button>
                     </div>
-
                     <div class="template-card">
                         <div
                             style="background: #FFEDD5; color: var(--orange-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
@@ -249,7 +229,6 @@
                             reception</p>
                         <button class="btn btn-outline btn-sm">Use Template</button>
                     </div>
-
                     <div class="template-card">
                         <div
                             style="background: #FEF9C3; color: #CA8A04; padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
@@ -260,7 +239,6 @@
                             class/exam hall</p>
                         <button class="btn btn-outline btn-sm">Use Template</button>
                     </div>
-
                     <div class="template-card">
                         <div
                             style="background: #DCFCE7; color: var(--green-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
@@ -271,7 +249,6 @@
                         </p>
                         <button class="btn btn-outline btn-sm">Use Template</button>
                     </div>
-
                     <div class="template-card">
                         <div
                             style="background: #FEE2E2; color: var(--red-600); padding: 0.75rem; border-radius: 50%; width: 3rem; height: 3rem; display: flex; align-items: center; justify-content: center; margin-bottom: var(--space-4);">
@@ -285,7 +262,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Quick Chips -->
         <section class="section">
             <div class="container">
@@ -301,7 +277,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Live Recent Requests -->
         <section class="section" style="background: var(--gray-50);">
             <div class="container">
@@ -335,7 +310,6 @@
                 </div>
             </div>
         </section>
-
         <!-- Bottom CTAs -->
         <section class="section">
             <div class="container text-center">
@@ -351,7 +325,6 @@
             </div>
         </section>
     </main>
-
     <footer class="footer">
         <div class="footer-grid">
             <div>
@@ -384,8 +357,6 @@
             </div>
         </div>
     </footer>
-
     <script src="shared.js"></script>
 </body>
-
 </html>

@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Track Order – DashDrop</title>
-
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <!-- Shared Styles -->
     <link rel="stylesheet" href="shared.css">
-
     <style>
         .tracking-container {
             max-width: 56rem;
             margin: var(--space-12) auto;
             padding: 0 var(--space-4);
         }
-
         .dasher-card {
             background: linear-gradient(135deg, var(--purple) 0%, #A78BFA 100%);
             color: var(--white);
@@ -27,7 +22,6 @@
             margin-bottom: var(--space-8);
             box-shadow: var(--shadow-xl);
         }
-
         .dasher-avatar {
             width: 80px;
             height: 80px;
@@ -41,12 +35,10 @@
             font-weight: 900;
             border: 4px solid rgba(255, 255, 255, 0.3);
         }
-
         .timeline {
             position: relative;
             padding-left: var(--space-12);
         }
-
         .timeline::before {
             content: '';
             position: absolute;
@@ -56,16 +48,13 @@
             width: 3px;
             background: var(--gray-200);
         }
-
         .timeline-item {
             position: relative;
             padding-bottom: var(--space-8);
         }
-
         .timeline-item:last-child {
             padding-bottom: 0;
         }
-
         .timeline-dot {
             position: absolute;
             left: -2.75rem;
@@ -80,36 +69,30 @@
             justify-content: center;
             z-index: 2;
         }
-
         .timeline-item.completed .timeline-dot {
             background: var(--green-600);
             border-color: var(--green-600);
             color: var(--white);
         }
-
         .timeline-item.active .timeline-dot {
             background: var(--purple);
             border-color: var(--purple);
             color: var(--white);
             animation: pulse 2s infinite;
         }
-
         .timeline-content {
             background: var(--white);
             padding: var(--space-6);
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-sm);
         }
-
         .timeline-item.completed .timeline-content {
             background: var(--gray-50);
         }
-
         .timeline-item.active .timeline-content {
             border: 2px solid var(--purple);
             box-shadow: var(--shadow-md);
         }
-
         .eta-box {
             background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
             padding: var(--space-6);
@@ -117,7 +100,6 @@
             text-align: center;
             margin-bottom: var(--space-8);
         }
-
         .countdown {
             font-size: 3rem;
             font-weight: 900;
@@ -126,7 +108,6 @@
         }
     </style>
 </head>
-
 <body>
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="mobile-menu-overlay hidden">
@@ -140,23 +121,17 @@
             <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
         </nav>
     </div>
-
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-wrapper">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="zap" width="24" stroke-width="3"></i>
-                </div>
-                <span>DashDrop</span>
+                <img src="dashdrop-logo-header.png" alt="DashDrop" style="height: 40px; width: auto;">
             </a>
-
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="request.html">Create Request</a>
                 <a href="tracking.html" style="color: var(--purple); font-weight: 900;">Track Order</a>
             </div>
-
             <div class="nav-actions">
                 <button class="icon-btn">
                     <i data-lucide="shopping-bag" width="24"></i>
@@ -168,7 +143,6 @@
             </div>
         </div>
     </nav>
-
     <main>
         <div class="tracking-container">
             <!-- Header -->
@@ -183,7 +157,6 @@
                     Your dasher is on the way!
                 </p>
             </div>
-
             <!-- ETA Box -->
             <div class="eta-box">
                 <p class="text-sm font-bold mb-2">ESTIMATED ARRIVAL</p>
@@ -193,7 +166,6 @@
                     Hostel Block A • Room 405
                 </p>
             </div>
-
             <!-- Dasher Info -->
             <div class="dasher-card">
                 <div style="display: flex; align-items: center; gap: var(--space-6); margin-bottom: var(--space-6);">
@@ -214,7 +186,6 @@
                         </div>
                     </div>
                 </div>
-
                 <div style="display: flex; gap: var(--space-4);">
                     <button class="btn btn-lg" style="flex: 1; background: var(--white); color: var(--purple);">
                         <i data-lucide="phone" width="20"></i> Call Dasher
@@ -225,7 +196,6 @@
                     </button>
                 </div>
             </div>
-
             <!-- Request Details -->
             <div class="card mb-8">
                 <h3 class="font-black text-xl mb-4">Order Details</h3>
@@ -252,11 +222,9 @@
                     </div>
                 </div>
             </div>
-
             <!-- Timeline -->
             <div class="card">
                 <h3 class="font-black text-xl mb-6">Delivery Progress</h3>
-
                 <div class="timeline">
                     <!-- Request Placed -->
                     <div class="timeline-item completed">
@@ -268,7 +236,6 @@
                             <p class="text-sm" style="color: var(--gray-600);">Today at 2:15 PM</p>
                         </div>
                     </div>
-
                     <!-- Dasher Accepted -->
                     <div class="timeline-item completed">
                         <div class="timeline-dot">
@@ -281,7 +248,6 @@
                             <p class="text-sm" style="color: var(--gray-600);">Today at 2:17 PM</p>
                         </div>
                     </div>
-
                     <!-- Picked Up -->
                     <div class="timeline-item completed">
                         <div class="timeline-dot">
@@ -294,7 +260,6 @@
                             <p class="text-sm" style="color: var(--gray-600);">Today at 2:23 PM</p>
                         </div>
                     </div>
-
                     <!-- On the Way -->
                     <div class="timeline-item active">
                         <div class="timeline-dot">
@@ -311,7 +276,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Delivered -->
                     <div class="timeline-item">
                         <div class="timeline-dot">
@@ -324,7 +288,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Help Section -->
             <div class="card mt-8">
                 <div style="display: flex; align-items: start; gap: var(--space-4);">
@@ -342,7 +305,6 @@
             </div>
         </div>
     </main>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-grid">
@@ -355,14 +317,12 @@
                     The ultimate micro-commerce platform built for students, by students.
                 </p>
             </div>
-
             <div>
                 <h4 class="footer-title">Platform</h4>
                 <a href="request.html" class="footer-link">Order Now</a>
                 <a href="dasher.html" class="footer-link">Become a Dasher</a>
                 <a href="tracking.html" class="footer-link">Track Order</a>
             </div>
-
             <div>
                 <h4 class="footer-title">Connect</h4>
                 <a href="index.html#team" class="footer-link">About Team</a>
@@ -370,7 +330,6 @@
                 <a href="#" class="footer-link">Contact Support</a>
             </div>
         </div>
-
         <div class="footer-bottom">
             <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
             <div style="display: flex; gap: var(--space-4);">
@@ -379,30 +338,23 @@
             </div>
         </div>
     </footer>
-
     <!-- Scripts -->
     <script src="shared.js"></script>
     <script>
         // Countdown Timer
         DashDrop.startCountdown('countdown', 5);
-
         // Simulate progress update after 10 seconds
         setTimeout(() => {
             const activeItem = document.querySelector('.timeline-item.active');
             const nextItem = activeItem.nextElementSibling;
-
             if (nextItem) {
                 activeItem.classList.remove('active');
                 activeItem.classList.add('completed');
                 activeItem.querySelector('.timeline-dot i').setAttribute('data-lucide', 'check');
-
                 nextItem.classList.add('active');
                 nextItem.querySelector('.timeline-dot i').setAttribute('data-lucide', 'check-circle');
-
                 lucide.createIcons();
-
                 DashDrop.showToast('Order delivered successfully!', 'success');
-
                 // Update status badge
                 document.querySelector('.badge-green').innerHTML = `
                     <i data-lucide="check-circle" width="14"></i> Order #2938 • Delivered
@@ -412,5 +364,4 @@
         }, 10000);
     </script>
 </body>
-
 </html>

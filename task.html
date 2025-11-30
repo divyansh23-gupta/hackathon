@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
             margin: var(--space-12) auto;
             padding: 0 var(--space-4);
         }
-
         .qr-display-card {
             background: var(--white);
             border: 3px solid var(--purple);
@@ -22,7 +20,6 @@
             text-align: center;
             margin-bottom: var(--space-8);
         }
-
         .qr-image-large {
             max-width: 400px;
             width: 100%;
@@ -30,25 +27,21 @@
             border-radius: var(--radius-xl);
             box-shadow: var(--shadow-lg);
         }
-
         .pickup-instructions {
             background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
             padding: var(--space-6);
             border-radius: var(--radius-xl);
             margin-bottom: var(--space-6);
         }
-
         .instruction-step {
             display: flex;
             align-items: start;
             gap: var(--space-4);
             margin-bottom: var(--space-4);
         }
-
         .instruction-step:last-child {
             margin-bottom: 0;
         }
-
         .step-circle {
             width: 2.5rem;
             height: 2.5rem;
@@ -61,7 +54,6 @@
             font-weight: 900;
             flex-shrink: 0;
         }
-
         .task-detail-row {
             display: flex;
             justify-content: space-between;
@@ -69,11 +61,9 @@
             padding: var(--space-4) 0;
             border-bottom: 1px solid var(--gray-200);
         }
-
         .task-detail-row:last-child {
             border-bottom: none;
         }
-
         .reward-highlight {
             background: linear-gradient(135deg, var(--green-600) 0%, #10B981 100%);
             color: var(--white);
@@ -82,19 +72,16 @@
             text-align: center;
             margin: var(--space-6) 0;
         }
-
         .status-progress {
             display: flex;
             gap: var(--space-3);
             margin-bottom: var(--space-6);
         }
-
         .status-step {
             flex: 1;
             text-align: center;
             position: relative;
         }
-
         .status-step::after {
             content: '';
             position: absolute;
@@ -105,11 +92,9 @@
             background: var(--gray-200);
             z-index: 0;
         }
-
         .status-step:last-child::after {
             display: none;
         }
-
         .status-circle {
             width: 2.5rem;
             height: 2.5rem;
@@ -124,12 +109,10 @@
             z-index: 1;
             font-weight: 900;
         }
-
         .status-step.completed .status-circle {
             background: var(--green-600);
             color: var(--white);
         }
-
         .status-step.active .status-circle {
             background: var(--purple);
             color: var(--white);
@@ -137,7 +120,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="mobile-menu" class="mobile-menu-overlay hidden">
         <button id="close-menu-btn" class="mobile-menu-close">
@@ -150,14 +132,10 @@
             <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
         </nav>
     </div>
-
     <nav class="navbar">
         <div class="nav-wrapper">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="zap" width="24" stroke-width="3"></i>
-                </div>
-                <span>DashDrop</span>
+                <img src="dashdrop-logo-header.png" alt="DashDrop" style="height: 40px; width: auto;">
             </a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
@@ -175,7 +153,6 @@
             </div>
         </div>
     </nav>
-
     <main>
         <div class="task-container">
             <!-- Initial View (Before Acceptance) -->
@@ -189,7 +166,6 @@
                         Student needs food pickup from canteen
                     </p>
                 </div>
-
                 <!-- QR Code Display -->
                 <div class="qr-display-card">
                     <h3 class="font-black text-xl mb-4">Student's Canteen QR Code</h3>
@@ -198,11 +174,9 @@
                         <i data-lucide="info" width="14"></i> Show this QR at the counter to collect the order
                     </div>
                 </div>
-
                 <!-- Task Details -->
                 <div class="card mb-6">
                     <h3 class="font-black text-xl mb-4">Pickup & Delivery Details</h3>
-
                     <div class="task-detail-row">
                         <div style="display: flex; align-items: center; gap: var(--space-3);">
                             <i data-lucide="map-pin" width="20" style="color: var(--orange-600);"></i>
@@ -210,7 +184,6 @@
                         </div>
                         <span class="font-bold" style="color: var(--orange-600);">Food Court / Canteen</span>
                     </div>
-
                     <div class="task-detail-row">
                         <div style="display: flex; align-items: center; gap: var(--space-3);">
                             <i data-lucide="home" width="20" style="color: var(--green-600);"></i>
@@ -219,32 +192,27 @@
                         <span id="detail-delivery">Hostel Block A • Room 405</span>
                     </div>
                 </div>
-
                 <!-- Reward -->
                 <div class="reward-highlight">
                     <p class="text-sm font-bold mb-2">YOUR REWARD</p>
                     <p class="text-4xl font-black mb-2" id="reward-amount">₹20</p>
                     <p class="text-sm" style="opacity: 0.9;">Pickup and delivery tip</p>
                 </div>
-
                 <!-- Mode Badge -->
                 <div class="text-center mb-6" id="mode-badge">
                     <div class="badge badge-gray" style="font-size: 1rem;">
                         <i data-lucide="package" width="16"></i> Normal Mode
                     </div>
                 </div>
-
                 <!-- Accept Button -->
                 <button class="btn btn-primary btn-lg btn-full mb-6" id="accept-btn">
                     <i data-lucide="check-circle" width="20"></i>
                     Accept Pickup Task
                 </button>
-
                 <button class="btn btn-outline btn-lg btn-full" onclick="window.location.href='food.html'">
                     Decline
                 </button>
             </div>
-
             <!-- Accepted View (After Acceptance) -->
             <div id="accepted-view" class="hidden">
                 <div class="text-center mb-8">
@@ -253,7 +221,6 @@
                     </div>
                     <h1 class="text-4xl font-black mb-4">Pickup in Progress</h1>
                 </div>
-
                 <!-- Status Progress -->
                 <div class="status-progress">
                     <div class="status-step completed" id="status-accepted">
@@ -275,7 +242,6 @@
                         <p class="text-sm font-bold">Delivered</p>
                     </div>
                 </div>
-
                 <!-- QR Code for Pickup -->
                 <div class="qr-display-card">
                     <h3 class="font-black text-xl mb-4">
@@ -287,14 +253,12 @@
                         <i data-lucide="alert-circle" width="16"></i> Staff will scan this QR code
                     </div>
                 </div>
-
                 <!-- Pickup Instructions -->
                 <div class="pickup-instructions">
                     <h3 class="font-black text-lg mb-4">
                         <i data-lucide="list-checks" width="20" style="display: inline; margin-right: 8px;"></i>
                         Pickup Process
                     </h3>
-
                     <div class="instruction-step">
                         <div class="step-circle">1</div>
                         <div>
@@ -302,7 +266,6 @@
                             <p class="text-sm" style="color: var(--gray-700);">Head to Food Court / Canteen counter</p>
                         </div>
                     </div>
-
                     <div class="instruction-step">
                         <div class="step-circle">2</div>
                         <div>
@@ -310,7 +273,6 @@
                             <p class="text-sm" style="color: var(--gray-700);">Staff will scan and verify the order</p>
                         </div>
                     </div>
-
                     <div class="instruction-step">
                         <div class="step-circle">3</div>
                         <div>
@@ -318,7 +280,6 @@
                             <p class="text-sm" style="color: var(--gray-700);">Staff will hand over the order</p>
                         </div>
                     </div>
-
                     <div class="instruction-step">
                         <div class="step-circle">4</div>
                         <div>
@@ -328,7 +289,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Task Summary Card -->
                 <div class="card mb-6">
                     <div
@@ -338,7 +298,6 @@
                     </div>
                     <p><strong>Deliver to:</strong> <span id="location-summary">Hostel Block A • Room 405</span></p>
                 </div>
-
                 <!-- Status Update Buttons -->
                 <div style="display: flex; flex-direction: column; gap: var(--space-4);">
                     <button class="btn btn-primary btn-lg btn-full" id="picked-up-btn">
@@ -354,7 +313,6 @@
                         Mark as Delivered
                     </button>
                 </div>
-
                 <!-- Contact Student -->
                 <button class="btn btn-outline btn-lg btn-full mt-4">
                     <i data-lucide="phone" width="20"></i>
@@ -363,7 +321,6 @@
             </div>
         </div>
     </main>
-
     <footer class="footer">
         <div class="footer-grid">
             <div>
@@ -396,16 +353,13 @@
             </div>
         </div>
     </footer>
-
     <script src="shared.js"></script>
     <script>
         // Load task data
         const urlParams = new URLSearchParams(window.location.search);
         const taskId = urlParams.get('id');
-
         // Get task from localStorage (mock database)
         let taskData = JSON.parse(localStorage.getItem('currentPickupRequest') || '{}');
-
         // If no data, use mock data
         if (!taskData.id) {
             taskData = {
@@ -418,13 +372,11 @@
                 pickupPoint: 'Food Court / Canteen'
             };
         }
-
         // Populate initial view
         document.getElementById('qr-image').src = taskData.qrImage;
         document.getElementById('detail-delivery').textContent =
             taskData.deliveryLocation + (taskData.roomNumber ? ' • ' + taskData.roomNumber : '');
         document.getElementById('reward-amount').textContent = '₹' + taskData.tip;
-
         if (taskData.mode === 'urgent') {
             document.getElementById('mode-badge').innerHTML = `
                 <div class="badge badge-red" style="font-size: 1rem;">
@@ -433,12 +385,10 @@
             `;
             lucide.createIcons();
         }
-
         // Accept button
         document.getElementById('accept-btn').addEventListener('click', function () {
             document.getElementById('initial-view').classList.add('hidden');
             document.getElementById('accepted-view').classList.remove('hidden');
-
             // Populate accepted view
             document.getElementById('qr-image-accepted').src = taskData.qrImage;
             document.getElementById('delivery-instruction').textContent =
@@ -446,44 +396,33 @@
             document.getElementById('reward-summary').textContent = taskData.tip;
             document.getElementById('location-summary').textContent =
                 taskData.deliveryLocation + (taskData.roomNumber ? ' • ' + taskData.roomNumber : '');
-
             DashDrop.showToast('Task accepted! Head to the canteen.', 'success');
         });
-
         // Status update buttons
         document.getElementById('picked-up-btn').addEventListener('click', function () {
             this.classList.add('hidden');
             document.getElementById('on-way-btn').classList.remove('hidden');
-
             document.getElementById('status-picked').classList.remove('active');
             document.getElementById('status-picked').classList.add('completed');
             document.getElementById('status-onway').classList.add('active');
-
             DashDrop.showToast('Food picked up! Now deliver to student.', 'success');
         });
-
         document.getElementById('on-way-btn').addEventListener('click', function () {
             this.classList.add('hidden');
             document.getElementById('delivered-btn').classList.remove('hidden');
-
             document.getElementById('status-onway').classList.remove('active');
             document.getElementById('status-onway').classList.add('completed');
             document.getElementById('status-delivered').classList.add('active');
-
             DashDrop.showToast('Almost there! Mark as delivered when done.', 'success');
         });
-
         document.getElementById('delivered-btn').addEventListener('click', function () {
             document.getElementById('status-delivered').classList.remove('active');
             document.getElementById('status-delivered').classList.add('completed');
-
             DashDrop.showToast('Task completed! Great job! 🎉', 'success');
-
             setTimeout(() => {
                 window.location.href = 'index.html';
             }, 2000);
         });
     </script>
 </body>
-
 </html>

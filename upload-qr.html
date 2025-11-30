@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +12,6 @@
             margin: var(--space-16) auto;
             padding: 0 var(--space-4);
         }
-
         .qr-upload-zone {
             border: 3px dashed var(--purple);
             border-radius: var(--radius-2xl);
@@ -29,13 +27,11 @@
             justify-content: center;
             margin-bottom: var(--space-8);
         }
-
         .qr-upload-zone:hover {
             border-color: var(--yellow);
             background: linear-gradient(to bottom, #FEFCE8, var(--white));
             transform: scale(1.02);
         }
-
         .qr-upload-zone.has-image {
             border-style: solid;
             border-color: var(--green-600);
@@ -43,7 +39,6 @@
             padding: var(--space-6);
             min-height: auto;
         }
-
         .qr-preview-card {
             background: var(--white);
             border: 2px solid var(--purple);
@@ -51,7 +46,6 @@
             padding: var(--space-6);
             margin-bottom: var(--space-8);
         }
-
         .qr-preview-image {
             max-width: 100%;
             max-height: 400px;
@@ -60,25 +54,21 @@
             display: block;
             box-shadow: var(--shadow-lg);
         }
-
         .info-box {
             background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
             padding: var(--space-6);
             border-radius: var(--radius-xl);
             margin-bottom: var(--space-8);
         }
-
         .step-row {
             display: flex;
             align-items: center;
             gap: var(--space-3);
             margin-bottom: var(--space-3);
         }
-
         .step-row:last-child {
             margin-bottom: 0;
         }
-
         .step-number {
             width: 2rem;
             height: 2rem;
@@ -92,13 +82,11 @@
             font-size: 0.875rem;
             flex-shrink: 0;
         }
-
         .mode-toggle-btn.urgent-active {
             background: var(--red-600);
             color: var(--white);
             border-color: var(--red-600);
         }
-
         .disclaimer {
             background: var(--gray-50);
             padding: var(--space-4);
@@ -108,7 +96,6 @@
         }
     </style>
 </head>
-
 <body>
     <div id="mobile-menu" class="mobile-menu-overlay hidden">
         <button id="close-menu-btn" class="mobile-menu-close">
@@ -121,14 +108,10 @@
             <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
         </nav>
     </div>
-
     <nav class="navbar">
         <div class="nav-wrapper">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="zap" width="24" stroke-width="3"></i>
-                </div>
-                <span>DashDrop</span>
+                <img src="dashdrop-logo-header.png" alt="DashDrop" style="height: 40px; width: auto;">
             </a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
@@ -146,7 +129,6 @@
             </div>
         </div>
     </nav>
-
     <main>
         <div class="upload-container">
             <!-- Header -->
@@ -156,7 +138,6 @@
                     Already ordered in the official canteen app? Upload your QR screenshot and we'll pick it up for you.
                 </p>
             </div>
-
             <!-- Info Box -->
             <div class="info-box">
                 <div class="step-row">
@@ -176,7 +157,6 @@
                     <p class="font-bold">Our dasher picks up & delivers</p>
                 </div>
             </div>
-
             <!-- Upload Form -->
             <form id="qr-upload-form">
                 <!-- QR Code Upload Zone -->
@@ -191,7 +171,6 @@
                     </div>
                 </div>
                 <input type="file" id="qr-input" accept="image/*" class="hidden" required>
-
                 <!-- Preview Card (Hidden Initially) -->
                 <div id="preview-card" class="qr-preview-card hidden">
                     <h3 class="font-black text-xl mb-4 text-center">Preview of Your Canteen Order</h3>
@@ -204,11 +183,9 @@
                         </p>
                     </div>
                 </div>
-
                 <!-- Delivery Details Section (Only shows after QR upload) -->
                 <div id="delivery-section" class="hidden">
                     <h3 class="font-black text-2xl mb-6">Delivery Details</h3>
-
                     <!-- Delivery Location -->
                     <div class="form-group">
                         <label for="delivery-location" class="form-label">
@@ -227,14 +204,12 @@
                             <option value="Lecture Hall">Lecture Hall</option>
                         </select>
                     </div>
-
                     <!-- Room / Exact Spot -->
                     <div class="form-group">
                         <label for="room-number" class="form-label">Room / Exact Spot (Optional)</label>
                         <input type="text" id="room-number" class="form-input"
                             placeholder="e.g., Room 405, Study Room 2">
                     </div>
-
                     <!-- Tip Amount -->
                     <div class="form-group">
                         <label for="tip" class="form-label">
@@ -250,7 +225,6 @@
                             <button type="button" class="chip" onclick="setTip(30)">₹30</button>
                         </div>
                     </div>
-
                     <!-- Delivery Mode -->
                     <div class="form-group">
                         <label class="form-label">Delivery Mode</label>
@@ -266,7 +240,6 @@
                             Urgent mode prioritizes your pickup and adds ₹15 extra tip for dashers.
                         </p>
                     </div>
-
                     <!-- Submit Button -->
                     <button type="submit" class="btn btn-lg btn-full mt-8"
                         style="background: var(--black); color: var(--yellow); font-size: 1.125rem; padding: 1rem;">
@@ -277,7 +250,6 @@
             </form>
         </div>
     </main>
-
     <footer class="footer">
         <div class="footer-grid">
             <div>
@@ -310,12 +282,10 @@
             </div>
         </div>
     </footer>
-
     <script src="shared.js"></script>
     <script>
         let qrImageData = null;
         let isUrgent = false;
-
         // QR Code Upload
         const qrInput = document.getElementById('qr-input');
         const uploadZone = document.getElementById('qr-upload-zone');
@@ -323,27 +293,21 @@
         const previewCard = document.getElementById('preview-card');
         const previewImg = document.getElementById('qr-preview-img');
         const deliverySection = document.getElementById('delivery-section');
-
         qrInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file && file.type.startsWith('image/')) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     qrImageData = e.target.result;
-
                     // Hide upload zone
                     uploadZone.classList.add('hidden');
-
                     // Show preview card
                     previewCard.classList.remove('hidden');
                     previewImg.src = e.target.result;
-
                     // Show delivery section
                     deliverySection.classList.remove('hidden');
-
                     // Reinitialize icons
                     lucide.createIcons();
-
                     // Scroll to delivery section
                     setTimeout(() => {
                         deliverySection.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -352,12 +316,10 @@
                 reader.readAsDataURL(file);
             }
         });
-
         // Mode Toggle
         const normalBtn = document.getElementById('normal-btn');
         const urgentBtn = document.getElementById('urgent-btn');
         const tipInput = document.getElementById('tip');
-
         urgentBtn.addEventListener('click', () => {
             normalBtn.classList.remove('active');
             urgentBtn.classList.add('active', 'urgent-active');
@@ -368,7 +330,6 @@
                 urgentBtn.dataset.adjusted = 'true';
             }
         });
-
         normalBtn.addEventListener('click', () => {
             urgentBtn.classList.remove('active', 'urgent-active');
             normalBtn.classList.add('active');
@@ -379,7 +340,6 @@
                 delete urgentBtn.dataset.adjusted;
             }
         });
-
         // Tip Selection
         function setTip(amount) {
             document.getElementById('tip').value = amount;
@@ -388,29 +348,24 @@
             });
             event.target.classList.add('chip-selected');
         }
-
         // Form Submission
         const form = document.getElementById('qr-upload-form');
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-
             if (!qrImageData) {
                 DashDrop.showToast('Please upload your QR code', 'error');
                 return;
             }
-
             const deliveryLocation = document.getElementById('delivery-location').value;
             if (!deliveryLocation) {
                 DashDrop.showToast('Please select delivery location', 'error');
                 return;
             }
-
             const tip = parseInt(document.getElementById('tip').value);
             if (!tip || tip < 15) {
                 DashDrop.showToast('Minimum tip is ₹15', 'error');
                 return;
             }
-
             // Create pickup request object
             const pickupRequest = {
                 id: DashDrop.generateId(),
@@ -423,18 +378,14 @@
                 status: 'pending',
                 createdAt: new Date().toISOString()
             };
-
             // Store in localStorage (mock database)
             localStorage.setItem('currentPickupRequest', JSON.stringify(pickupRequest));
-
             // Show success and redirect
             DashDrop.showToast('Pickup request created!', 'success');
-
             setTimeout(() => {
                 window.location.href = `task.html?id=${pickupRequest.id}`;
             }, 1000);
         });
     </script>
 </body>
-
 </html>

@@ -1,24 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accept Request – DashDrop Dasher</title>
-
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-
     <!-- Shared Styles -->
     <link rel="stylesheet" href="shared.css">
-
     <style>
         .dasher-container {
             max-width: 48rem;
             margin: var(--space-12) auto;
             padding: 0 var(--space-4);
         }
-
         .request-detail-card {
             background: var(--white);
             border-radius: var(--radius-2xl);
@@ -27,12 +22,10 @@
             border: 3px solid var(--purple);
             margin-bottom: var(--space-6);
         }
-
         .request-detail-card.urgent {
             border-color: var(--red-600);
             background: linear-gradient(to bottom, #FEF2F2, var(--white));
         }
-
         .reward-box {
             background: linear-gradient(135deg, var(--yellow) 0%, #FFF8CC 100%);
             padding: var(--space-6);
@@ -40,7 +33,6 @@
             text-align: center;
             margin-bottom: var(--space-6);
         }
-
         .location-row {
             display: flex;
             align-items: center;
@@ -50,13 +42,11 @@
             border-radius: var(--radius-lg);
             margin-bottom: var(--space-3);
         }
-
         .status-buttons {
             display: grid;
             grid-template-columns: 1fr;
             gap: var(--space-4);
         }
-
         .status-btn {
             padding: var(--space-4);
             border-radius: var(--radius-xl);
@@ -70,38 +60,31 @@
             justify-content: center;
             gap: var(--space-3);
         }
-
         .status-btn:hover {
             border-color: var(--purple);
             background: var(--gray-50);
         }
-
         .status-btn.active {
             background: var(--green-600);
             color: var(--white);
             border-color: var(--green-600);
         }
-
         .status-btn.completed {
             background: var(--gray-200);
             color: var(--gray-600);
             cursor: not-allowed;
         }
-
         .accepted-view {
             display: none;
         }
-
         .accepted-view.active {
             display: block;
         }
-
         .initial-view.hidden {
             display: none;
         }
     </style>
 </head>
-
 <body>
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="mobile-menu-overlay hidden">
@@ -115,23 +98,17 @@
             <button class="btn btn-yellow btn-lg">Login / Sign Up</button>
         </nav>
     </div>
-
     <!-- Navbar -->
     <nav class="navbar">
         <div class="nav-wrapper">
             <a href="index.html" class="logo">
-                <div class="logo-icon">
-                    <i data-lucide="zap" width="24" stroke-width="3"></i>
-                </div>
-                <span>DashDrop</span>
+                <img src="dashdrop-logo-header.png" alt="DashDrop" style="height: 40px; width: auto;">
             </a>
-
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="request.html">Create Request</a>
                 <a href="dasher.html" style="color: var(--purple); font-weight: 900;">Dasher Dashboard</a>
             </div>
-
             <div class="nav-actions">
                 <div class="badge badge-purple">
                     <i data-lucide="star" width="14"></i> 4.9 Rating
@@ -142,7 +119,6 @@
             </div>
         </div>
     </nav>
-
     <main>
         <div class="dasher-container">
             <!-- Initial View -->
@@ -154,7 +130,6 @@
                         Review the details and accept if you're available.
                     </p>
                 </div>
-
                 <!-- Request Details -->
                 <div class="request-detail-card urgent" id="request-card">
                     <div
@@ -166,14 +141,11 @@
                             <i data-lucide="clock" width="14"></i> 2 mins ago
                         </div>
                     </div>
-
                     <h2 class="text-3xl font-black mb-4">Notebooks & Stationery</h2>
-
                     <p class="text-lg mb-6" style="color: var(--gray-700);">
                         Need notebooks and pens urgently. Stationery shop near campus. Please hurry, exam in 30
                         minutes.
                     </p>
-
                     <!-- Locations -->
                     <div class="mb-6">
                         <div class="location-row">
@@ -186,11 +158,9 @@
                                 <p class="font-black text-lg">Campus Medical Store</p>
                             </div>
                         </div>
-
                         <div style="text-align: center; margin: var(--space-2) 0;">
                             <i data-lucide="arrow-down" width="24" style="color: var(--gray-400);"></i>
                         </div>
-
                         <div class="location-row">
                             <div
                                 style="background: var(--green-50); color: var(--green-600); padding: 0.75rem; border-radius: 50%;">
@@ -202,7 +172,6 @@
                             </div>
                         </div>
                     </div>
-
                     <!-- Estimated Cost -->
                     <div
                         style="background: var(--gray-50); padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-6);">
@@ -215,14 +184,12 @@
                             <span class="font-bold">~350m</span>
                         </div>
                     </div>
-
                     <!-- Reward -->
                     <div class="reward-box">
                         <p class="text-sm font-bold mb-2">YOUR REWARD</p>
                         <p class="text-5xl font-black mb-2">₹30</p>
                         <p class="text-sm font-bold" style="color: var(--gray-700);">+ Urgent Bonus ₹15</p>
                     </div>
-
                     <!-- Action Buttons -->
                     <div style="display: flex; gap: var(--space-4);">
                         <button class="btn btn-outline btn-lg" style="flex: 1;"
@@ -234,7 +201,6 @@
                         </button>
                     </div>
                 </div>
-
                 <!-- Info -->
                 <div class="card">
                     <div style="display: flex; align-items: start; gap: var(--space-4);">
@@ -252,7 +218,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Accepted View -->
             <div class="accepted-view" id="accepted-view">
                 <!-- Header -->
@@ -265,7 +230,6 @@
                         Keep the student informed about your progress.
                     </p>
                 </div>
-
                 <!-- Request Summary -->
                 <div class="card mb-6">
                     <h3 class="font-black text-xl mb-4">Notebooks & Stationery</h3>
@@ -280,7 +244,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- Status Update Buttons -->
                 <div class="status-buttons">
                     <button class="status-btn" id="status-picked-up">
@@ -291,7 +254,6 @@
                         </div>
                         <i data-lucide="circle" width="24" style="color: var(--gray-300);"></i>
                     </button>
-
                     <button class="status-btn" id="status-on-way" disabled>
                         <i data-lucide="bike" width="24"></i>
                         <div style="text-align: left; flex: 1;">
@@ -300,7 +262,6 @@
                         </div>
                         <i data-lucide="circle" width="24" style="color: var(--gray-300);"></i>
                     </button>
-
                     <button class="status-btn" id="status-delivered" disabled>
                         <i data-lucide="check-circle" width="24"></i>
                         <div style="text-align: left; flex: 1;">
@@ -310,7 +271,6 @@
                         <i data-lucide="circle" width="24" style="color: var(--gray-300);"></i>
                     </button>
                 </div>
-
                 <!-- Contact Student -->
                 <div class="card mt-6">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -326,7 +286,6 @@
             </div>
         </div>
     </main>
-
     <!-- Footer -->
     <footer class="footer">
         <div class="footer-grid">
@@ -339,14 +298,12 @@
                     The ultimate micro-commerce platform built for students, by students.
                 </p>
             </div>
-
             <div>
                 <h4 class="footer-title">Platform</h4>
                 <a href="request.html" class="footer-link">Order Now</a>
                 <a href="dasher.html" class="footer-link">Become a Dasher</a>
                 <a href="tracking.html" class="footer-link">Track Order</a>
             </div>
-
             <div>
                 <h4 class="footer-title">Connect</h4>
                 <a href="index.html#team" class="footer-link">About Team</a>
@@ -354,7 +311,6 @@
                 <a href="#" class="footer-link">Contact Support</a>
             </div>
         </div>
-
         <div class="footer-bottom">
             <p>© 2025 DashDrop. Built for InnovEdam Hackathon 2025.</p>
             <div style="display: flex; gap: var(--space-4);">
@@ -363,7 +319,6 @@
             </div>
         </div>
     </footer>
-
     <!-- Scripts -->
     <script src="shared.js"></script>
     <script>
@@ -373,9 +328,7 @@
         const statusPickedUp = document.getElementById('status-picked-up');
         const statusOnWay = document.getElementById('status-on-way');
         const statusDelivered = document.getElementById('status-delivered');
-
         let currentStatus = 0;
-
         // Accept Request
         acceptBtn.addEventListener('click', () => {
             initialView.classList.add('hidden');
@@ -383,7 +336,6 @@
             DashDrop.showToast('Request accepted! Update your status as you progress.', 'success');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
         // Status Updates
         statusPickedUp.addEventListener('click', () => {
             if (currentStatus === 0) {
@@ -395,7 +347,6 @@
                 DashDrop.showToast('Status updated: Picked Up', 'success');
             }
         });
-
         statusOnWay.addEventListener('click', () => {
             if (currentStatus === 1) {
                 statusPickedUp.classList.add('completed');
@@ -408,7 +359,6 @@
                 DashDrop.showToast('Status updated: On the Way', 'success');
             }
         });
-
         statusDelivered.addEventListener('click', () => {
             if (currentStatus === 2) {
                 statusOnWay.classList.add('completed');
@@ -418,7 +368,6 @@
                 lucide.createIcons();
                 currentStatus = 3;
                 DashDrop.showToast('Delivery completed! ₹30 added to your wallet.', 'success');
-
                 // Redirect to dasher dashboard after 2 seconds
                 setTimeout(() => {
                     window.location.href = 'index.html';
@@ -427,5 +376,4 @@
         });
     </script>
 </body>
-
 </html>
