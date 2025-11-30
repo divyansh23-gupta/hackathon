@@ -1,5 +1,5 @@
 -- ==========================================
--- CAMPUSDASH SUPABASE DATABASE SCHEMA
+-- DASHDROP SUPABASE DATABASE SCHEMA
 -- Complete SQL for all tables, RLS policies, and functions
 -- ==========================================
 
